@@ -1,0 +1,113 @@
+---
+
+alwaysApply: true
+
+# Rule: Generate a Deterministic Task Plan from a PRD
+
+## Goal
+
+Produce a clear, testable task plan in Markdown from a given PRD for a junior developer.
+
+## Inputs
+
+* PRD reference: path or pasted content.
+* Must parse PRD front matter: `type: prd`, `feature_key`, `version`, `date`.
+
+## Output
+
+* **Format:** Markdown (`.md`)
+* **Location:** `tasks/`
+* **Filename:** `tasks-<feature_key>-v1.0.0.md`
+
+  * If `feature_key` is missing, use the PRD base name.
+  * If file exists, bump patch version.
+
+## Determinism and IDs
+
+* Parent tasks: `PT-1..n`. Subtasks: `ST-x.y`.
+* Map every task to PRD IDs with `maps:` (e.g., `FR-2, AC-3`).
+* No gaps in numbering. Keep stable across reruns.
+
+## Process
+
+1. **Load PRD.** Validate required sections. If missing, record under **Gaps** and continue.
+2. **Phase 1: Parent Tasks.** Generate 4–8 parent tasks covering all FRs, NFRs, Security and Privacy, Telemetry, Rollout, and Docs. Save draft with only parent tasks. Output: `High-level tasks ready. Reply "Go" to expand subtasks.`
+3. **Wait for "Go".**
+4. **Phase 2: Subtasks.** Expand each parent task into actionable subtasks with clear done criteria.
+5. **Relevant Files.** List files to create or modify plus test files.
+6. **Finalize.** Append Notes and Validation Checklist. Save.
+
+## Mandatory Coverage
+
+* Every `FR-#` maps to at least one `PT` and one `ST`.
+* Include tasks for NFRs (performance, accessibility WCAG 2.1 AA).
+* Include Security, Privacy, and Compliance tasks (DPDP, GDPR, HIPAA as specified in the PRD).
+* Include Telemetry and Metrics tasks.
+* Include Rollout with feature flag and kill switch.
+* Include Risks and Mitigations.
+* Include Docs and handover.
+
+## Output Structure (must follow)
+
+```markdown
+---
+type: task_plan
+version: 1.0.0
+feature_key: <from PRD or fallback>
+prd_ref: <path or title>
+date: <YYYY-MM-DD>
+status: Draft
+---
+
+## Relevant Files
+- `path/to/module.ts` - reason.
+- `path/to/module.test.ts` - tests.
+
+### Notes
+- Place tests alongside code.
+- Run tests with the project runner (for example `npm test` or `pytest`).
+
+## Tasks
+
+- [ ] PT-1 <Title> (maps: FR-1, FR-3)
+  - [ ] ST-1.1 <Subtask> (done: <observable>)
+  - [ ] ST-1.2 <Subtask> (done: <observable>)
+- [ ] PT-2 <Title> (maps: NFR-1)
+  - [ ] ST-2.1 <Subtask> (done: <observable>)
+- [ ] PT-3 Security, Privacy, and Compliance (maps: Section 7)
+  - [ ] ST-3.1 Threat model and mitigations recorded
+  - [ ] ST-3.2 AuthN and AuthZ, rate limits, audit logs implemented
+- [ ] PT-4 Telemetry and Metrics (maps: Section 9)
+  - [ ] ST-4.1 Emit EVT-# with fields
+  - [ ] ST-4.2 Dashboards and alerts
+- [ ] PT-5 Rollout and Guardrails (maps: Section 10)
+  - [ ] ST-5.1 Feature flag `<name>` behind allowlist
+  - [ ] ST-5.2 Ramp plan and rollback
+- [ ] PT-6 Docs and Handover
+  - [ ] ST-6.1 README and ADR updated
+
+## Gaps (from PRD)
+- G-1 <Missing info or Unknown> - owner: <name>, due: <date>
+
+## Validation Checklist
+- All FRs mapped to tasks and subtasks.
+- Each subtask has a `done:` observable.
+- Security, Privacy, and Compliance tasks present if PRD Section 7 exists.
+- Telemetry and Rollout tasks present.
+- Tests listed for each file.
+- Filename echoed: `tasks-<feature_key>-vX.Y.Z.md`
+```
+
+## Interaction Model
+
+* After Phase 1, pause until the user replies **Go**. To bypass, the user may say **Go now** in the initial request.
+
+## Safeguards
+
+* Do not invent facts. Use the PRD. If the PRD has **Unknowns** or **Open Questions**, create a **Gaps** section and a **PT-0 Discovery** block.
+* If repo scan is unavailable, file paths are reasoned placeholders.
+
+## Save Rules
+
+* Ensure `tasks/` exists.
+* Write atomically. If name collision, bump patch version.

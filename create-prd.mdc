@@ -1,0 +1,130 @@
+
+
+alwaysApply: true
+
+# Rule: Generate a Deterministic Product Requirements Document (PRD)
+
+## Goal
+
+Produce a clear, testable PRD in Markdown for a junior developer to implement the feature safely.
+
+## Process
+
+1. Receive Initial Prompt.
+2. Ask Clarifying Questions (≤5). Prioritize: problem, user, scope, acceptance, constraints. If the user declines or does not answer, proceed with best effort using **Assumptions** and tag unknowns as **Unknown**.
+3. Generate PRD strictly following the template and rules below.
+4. Save to path `tasks/` with filename `prd-<feature-slug>-v1.0.0.md`. Create the `tasks/` directory if missing. `<feature-slug>` = lowercase kebab-case from title, ASCII only.
+
+## Clarifying Questions (select up to 5)
+
+* Problem/Goal: What is the user problem and success signal?
+* Target User/Persona: Who uses it first?
+* Scope: Must-have vs out-of-scope?
+* Acceptance: What exact conditions mean “done”?
+* Constraints: Platforms, integrations, compliance, performance, budget/time?
+
+If any answer is Unknown, proceed and record under **Assumptions** or **Open Questions**.
+
+## PRD Template (must include all required sections)
+
+```
+---
+type: prd
+version: 1.0.0
+feature_key: <feature-slug>
+status: Draft
+owner: <name or Unknown>
+date: <YYYY-MM-DD>
+---
+
+# 1. Overview
+- Summary: <≤80 words>
+- Problem: <what breaks today>
+- Goal: <single sentence, measurable>
+
+# 2. Goals (SMART)
+- G1:
+- G2:
+
+# 3. Non-Goals (Out of Scope)
+- NG1:
+- NG2:
+
+# 4. User Stories
+- US1: As a <role>, I want <action> so that <benefit>.
+- US2: ...
+
+# 5. Functional Requirements
+- FR-1: <must statement>
+- FR-2: ...
+(Each FR maps to at least one AC)
+
+# 6. Non-Functional Requirements
+- NFR-1: Performance <e.g., p95 < 300 ms for endpoint X>.
+- NFR-2: Availability, reliability, localization, accessibility (WCAG 2.1 AA), etc.
+
+# 7. Security, Privacy, Compliance
+- Data in/out, retention, masking, logging policy.
+- Compliance: <GDPR/DPDP/HIPAA/None>. Legal basis if personal data.
+- Threats + mitigations (at least authN/authZ, rate limit, audit logs).
+
+# 8. Acceptance Criteria (Gherkin)
+- AC-1 (maps: FR-1)
+  Scenario: <name>
+  Given <preconditions>
+  When <action>
+  Then <observable result>
+- AC-2 (maps: FR-2) ...
+
+# 9. Telemetry & Metrics
+- Events: EVT-1, EVT-2 with payload fields.
+- KPIs: activation, error rate, latency, adoption.
+
+# 10. Rollout & Guardrails
+- Feature flag: <name>
+- Ramp: <internal -> 5% -> 25% -> 100%>
+- Kill switch behavior and rollback plan.
+
+# 11. Dependencies & Integration Points
+- Systems/APIs, owners, SLAs.
+
+# 12. Risks & Mitigations
+- R-1: <risk> → <mitigation>.
+- R-2: ...
+
+# 13. Design Considerations
+- Links to mocks/specs. Mobile/desktop states. Accessibility notes.
+
+# 14. Assumptions
+- A-1: ...
+- A-2: ...
+
+# 15. Open Questions
+- Q-1: ...
+- Q-2: ...
+
+# 16. Appendix (Optional)
+- API contracts, schemas, example payloads, edge cases table.
+```
+
+## Output Rules
+
+* Use numbered IDs: FR-#, NFR-#, AC-#, R-#, EVT-#. Maintain 1-based, no gaps.
+* Cross-reference FRs ↔ ACs. Each FR must have ≥1 AC.
+* Mark Unknown if not provided. Do not invent facts.
+* Use Indian context when relevant (₹, IST dates 24-hour).
+* Tone: precise, no hype, no code implementation.
+
+## Finalization
+
+* Save file at `tasks/prd-<feature-slug>-v1.0.0.md`. If file exists, bump patch version.
+* Echo the chosen filename at the end of generation.
+
+## Validation Checklist (run before saving)
+
+* All required sections present and non-empty.
+* FRs numbered and each mapped to ACs.
+* Security/Privacy section not empty.
+* Telemetry and Rollout present.
+* Non-Goals present.
+* Unknowns explicitly labeled.
