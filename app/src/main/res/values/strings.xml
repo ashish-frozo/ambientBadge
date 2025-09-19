@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ambient Scribe</string>
+    <string name="initializing_audio">Initializing audio capture…</string>
+    <string name="recording_active">Recording active</string>
+    <string name="recording_stopped">Recording stopped</string>
+    <string name="audio_permission_required">Audio recording permission is required</string>
+    <string name="audio_init_failed">Failed to initialize audio capture</string>
+    <string name="recording_start_failed">Failed to start recording</string>
+    <string name="start_recording">Start Recording</string>
+    <string name="stop_recording">Stop Recording</string>
+    <string name="swap_roles">Swap Roles</string>
+    <string name="transcription_hint">Transcription will appear here…</string>
+    <string name="doctor_label">Doctor</string>
+    <string name="patient_label">Patient</string>
+    <string name="unknown_speaker">Unknown Speaker</string>
+    <string name="roles_swapped">Speaker roles swapped</string>
+    <string name="delete_last_30s">Delete Last 30s</string>
+    <string name="audio_purged">Audio data purged</string>
+    <string name="buffer_verified_empty">Audio buffer verified empty</string>
+    <string name="buffer_not_empty_warning">Warning: Audio buffer not empty!</string>
+    
+    <!-- ASR Error Strings -->
+    <string name="retry">Retry</string>
+    <string name="error_icon_description">Error icon</string>
+    <string name="network_error_title">Network Error</string>
+    <string name="thermal_error_title">Device Overheating</string>
+    <string name="decoder_error_title">Transcription Error</string>
+    <string name="audio_error_title">Audio Input Error</string>
+    <string name="permission_error_title">Permission Error</string>
+    <string name="resource_error_title">Resource Error</string>
+    <string name="initialization_error_title">Initialization Error</string>
+    <string name="unknown_error_title">Unknown Error</string>
+    
+    <!-- Audio Processing Settings -->
+    <string name="audio_processing_settings">Audio Processing Settings</string>
+    <string name="noise_suppression">Noise Suppression</string>
+    <string name="echo_cancellation">Echo Cancellation</string>
+    <string name="automatic_gain_control">Automatic Gain Control</string>
+    <string name="audio_processing_info">Changes will take effect immediately. Settings are saved per clinic.</string>
+    
+    <!-- Ephemeral Mode -->
+    <string name="ephemeral_mode">Ephemeral Mode (RAM-only, purged on exit)</string>
+</resources>
