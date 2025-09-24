@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="?attr/colorSurfaceContainer">
+
+    <TextView
+        android:id="@+id/titleAudioProcessingSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/audio_processing_settings"
+        android:textAppearance="?attr/textAppearanceTitleMedium"
+        android:layout_marginBottom="16dp" />
+
+    <Switch
+        android:id="@+id/switchNoiseSuppression"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/noise_suppression"
+        android:paddingVertical="8dp"
+        android:layout_marginBottom="8dp" />
+
+    <Switch
+        android:id="@+id/switchEchoCancellation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/echo_cancellation"
+        android:paddingVertical="8dp"
+        android:layout_marginBottom="8dp" />
+
+    <Switch
+        android:id="@+id/switchAutomaticGainControl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/automatic_gain_control"
+        android:paddingVertical="8dp"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/infoTextAudioProcessing"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/audio_processing_info"
+        android:textAppearance="?attr/textAppearanceBodySmall"
+        android:textColor="?attr/colorOnSurfaceVariant" />
+
+</LinearLayout>

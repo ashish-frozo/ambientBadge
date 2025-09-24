@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/rounded_background_outline">
+
+    <TextView
+        android:id="@+id/instructionsTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="@string/general_instructions"
+        android:textAppearance="?attr/textAppearanceSubtitle2"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/instructionsList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:lineSpacingExtra="4dp"
+        tools:text="• Take medications as prescribed\n• Complete full course of antibiotics\n• Monitor for side effects" />
+
+</LinearLayout>

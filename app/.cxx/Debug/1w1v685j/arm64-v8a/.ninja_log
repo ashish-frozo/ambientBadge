@@ -1,0 +1,10 @@
+# ninja log v5
+0	12	0	clean	1d70afe63a2fbb46
+839	1061	1758512031814539818	/Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/cxx/Debug/1w1v685j/obj/arm64-v8a/libwhisper_android.so	6777a3a1580e6cf9
+12	838	1758512031602183295	CMakeFiles/whisper_android.dir/whisper_android.cpp.o	6f8f88011b75ae98
+8	836	1758519449683060562	CMakeFiles/whisper_android.dir/whisper_android.cpp.o	6f8f88011b75ae98
+0	412	1758519470103044797	/Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/cxx/Debug/1w1v685j/obj/arm64-v8a/libwhisper_android.so	6777a3a1580e6cf9
+0	671	1758519470378553288	CMakeFiles/llama_android.dir/llama_android.cpp.o	3092126e5b04a50b
+671	728	1758519470425543595	/Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/cxx/Debug/1w1v685j/obj/arm64-v8a/libllama_android.so	9511ca546784094
+0	755	1758519594028395508	CMakeFiles/llama_android.dir/llama_android.cpp.o	3092126e5b04a50b
+755	949	1758519594203628195	/Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/cxx/Debug/1w1v685j/obj/arm64-v8a/libllama_android.so	9511ca546784094

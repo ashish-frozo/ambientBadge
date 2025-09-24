@@ -1,0 +1,3 @@
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/.cxx/RelWithDebInfo/2jc3w2l4/arm64-v8a/CMakeFiles/whisper_android.dir
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/.cxx/RelWithDebInfo/2jc3w2l4/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/.cxx/RelWithDebInfo/2jc3w2l4/arm64-v8a/CMakeFiles/rebuild_cache.dir

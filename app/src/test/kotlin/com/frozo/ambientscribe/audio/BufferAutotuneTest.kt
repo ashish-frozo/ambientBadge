@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import com.frozo.ambientscribe.telemetry.MetricsCollector
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -14,9 +15,11 @@ import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import timber.log.Timber
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
@@ -28,6 +31,9 @@ class BufferAutotuneTest {
     
     @Mock
     private lateinit var mockAudioRecord: AudioRecord
+    
+    @Mock
+    private lateinit var mockMetricsCollector: MetricsCollector
     
     @Before
     fun setUp() {
@@ -48,94 +54,101 @@ class BufferAutotuneTest {
         // Mock AudioRecord instance
         whenever(mockAudioRecord.bufferSizeInFrames).thenReturn(2048)
         whenever(mockAudioRecord.state).thenReturn(AudioRecord.STATE_INITIALIZED)
+        
+        // Mock MetricsCollector
+        runTest {
+            whenever(mockMetricsCollector.recordEvent(anyString(), any())).thenReturn(Unit)
+        }
     }
     
     @Test
-    fun `buffer autotune should detect underruns and log metrics`() = runTest {
-        // Create a test implementation that simulates underruns
-        val testCapture = object : AudioCapture(mockContext) {
-            // Override to expose metrics for testing
-            fun simulateUnderruns(count: Int) {
-                val metrics = mutableMapOf<String, Any>()
-                repeat(count) {
-                    // Simulate logging underrun metrics
-                    metricsCollector?.logMetricEvent("buffer_autotune", mapOf(
-                        "old_size" to 4096,
-                        "new_size" to 6144, // 1.5x increase
-                        "reason" to "underrun",
-                        "consecutive_events" to 3
-                    ))
+    fun testBufferUnderrunHandling() = runTest {
+        // Create AudioCapture with mocked dependencies
+        val audioCapture = AudioCapture(mockContext)
+        
+        // Initialize audio capture
+        val result = audioCapture.initialize()
+        assertTrue(result)
+        
+        // Simulate buffer underrun by reading too slowly
+        whenever(mockAudioRecord.read(any<ByteArray>(), anyInt(), anyInt())).thenReturn(AudioRecord.ERROR_INVALID_OPERATION)
+        
+        // Start recording
+        audioCapture.startRecording()
+        
+        // Get audio flow to trigger buffer processing
+        val audioFlow = audioCapture.getAudioFlow()
+        assertNotNull(audioFlow)
+        
+        // Stop recording
+        audioCapture.stopRecording()
+        
+        // Cleanup
+        audioCapture.cleanup()
+    }
+    
+    @Test
+    fun testBufferOverrunHandling() = runTest {
+        // Create AudioCapture with mocked dependencies
+        val audioCapture = AudioCapture(mockContext)
+        
+        // Initialize audio capture
+        val result = audioCapture.initialize()
+        assertTrue(result)
+        
+        // Simulate buffer overrun by reading too quickly
+        whenever(mockAudioRecord.read(any<ByteArray>(), anyInt(), anyInt())).thenReturn(-2) // ERROR_WOULD_BLOCK
+        
+        // Start recording
+        audioCapture.startRecording()
+        
+        // Get audio flow to trigger buffer processing
+        val audioFlow = audioCapture.getAudioFlow()
+        assertNotNull(audioFlow)
+        
+        // Stop recording
+        audioCapture.stopRecording()
+        
+        // Cleanup
+        audioCapture.cleanup()
+    }
+    
+    @Test
+    fun testBufferSizeAdjustment() = runTest {
+        // Create AudioCapture with mocked dependencies
+        val audioCapture = AudioCapture(mockContext)
+        
+        // Initialize audio capture
+        val result = audioCapture.initialize()
+        assertTrue(result)
+        
+        // Simulate successful audio reading
+        whenever(mockAudioRecord.read(any<ByteArray>(), anyInt(), anyInt())).thenAnswer { invocation ->
+            val buffer = invocation.arguments[0] as ByteArray
+            val offset = invocation.arguments[1] as Int
+            val length = invocation.arguments[2] as Int
+            
+            // Fill buffer with test data
+            for (i in offset until offset + length) {
+                if (i < buffer.size) {
+                    buffer[i] = (i % 256).toByte()
                 }
             }
+            
+            length // Return number of bytes read
         }
         
-        // Initialize the audio capture
-        testCapture.initialize()
+        // Start recording
+        audioCapture.startRecording()
         
-        // Simulate underruns
-        testCapture.simulateUnderruns(3)
+        // Get audio flow to trigger buffer processing
+        val audioFlow = audioCapture.getAudioFlow()
+        assertNotNull(audioFlow)
         
-        // Verify metrics were logged (would need a way to verify this in a real test)
-        // This is a placeholder assertion
-        assertTrue(true, "Test completed without exceptions")
-    }
-    
-    @Test
-    fun `buffer autotune should detect overruns and log metrics`() = runTest {
-        // Create a test implementation that simulates overruns
-        val testCapture = object : AudioCapture(mockContext) {
-            // Override to expose metrics for testing
-            fun simulateOverruns(count: Int) {
-                val metrics = mutableMapOf<String, Any>()
-                repeat(count) {
-                    // Simulate logging overrun metrics
-                    metricsCollector?.logMetricEvent("buffer_autotune", mapOf(
-                        "old_size" to 4096,
-                        "new_size" to 3072, // 0.75x decrease
-                        "reason" to "overrun",
-                        "consecutive_events" to 3
-                    ))
-                }
-            }
-        }
+        // Stop recording
+        audioCapture.stopRecording()
         
-        // Initialize the audio capture
-        testCapture.initialize()
-        
-        // Simulate overruns
-        testCapture.simulateOverruns(2)
-        
-        // Verify metrics were logged (would need a way to verify this in a real test)
-        // This is a placeholder assertion
-        assertTrue(true, "Test completed without exceptions")
-    }
-    
-    @Test
-    fun `buffer stats should be logged at end of processing`() = runTest {
-        // Create a test implementation that simulates buffer stats
-        val testCapture = object : AudioCapture(mockContext) {
-            // Override to expose metrics for testing
-            fun simulateBufferStats() {
-                // Simulate logging buffer stats
-                metricsCollector?.logMetricEvent("audio_buffer_stats", mapOf(
-                    "underruns" to 5,
-                    "overruns" to 3,
-                    "buffer_size" to 4096,
-                    "buffer_adjustments" to 2,
-                    "sample_rate" to 16000,
-                    "needs_resampling" to false
-                ))
-            }
-        }
-        
-        // Initialize the audio capture
-        testCapture.initialize()
-        
-        // Simulate buffer stats logging
-        testCapture.simulateBufferStats()
-        
-        // Verify metrics were logged (would need a way to verify this in a real test)
-        // This is a placeholder assertion
-        assertTrue(true, "Test completed without exceptions")
+        // Cleanup
+        audioCapture.cleanup()
     }
 }

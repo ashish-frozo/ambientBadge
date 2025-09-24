@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/confidence_override_description"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="?attr/colorOnSurface" />
+
+    <TextView
+        android:id="@+id/confidenceValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:textAppearance="?attr/textAppearanceHeadline4"
+        android:textColor="?attr/colorPrimary"
+        android:textStyle="bold"
+        tools:text="75%" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/confidenceSlider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:valueFrom="0"
+        android:valueTo="100"
+        app:thumbColor="?attr/colorPrimary"
+        app:trackColorActive="?attr/colorPrimary"
+        app:trackColorInactive="?attr/colorSurfaceVariant" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/confidence_low"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="?attr/colorError" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/confidence_medium"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="?attr/colorSecondary" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="@string/confidence_high"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="?attr/colorPrimary" />
+
+    </LinearLayout>
+
+</LinearLayout>

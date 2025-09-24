@@ -1,8 +1,8 @@
-# CMakeLists.txt for Whisper Android native library
+# CMakeLists.txt for AI native libraries (Whisper + LLaMA)
 
 cmake_minimum_required(VERSION 3.22.1)
 
-project("whisper_android")
+project("ai_android")
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -12,16 +12,28 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_library(log-lib log)
 find_library(android-lib android)
 
-# Add the native library
+# Add the Whisper native library
 add_library(whisper_android SHARED
     whisper_android.cpp)
 
-# Include directories (would include CTranslate2 headers in real implementation)
+# Add the LLaMA native library
+add_library(llama_android SHARED
+    llama_android.cpp)
+
+# Include directories
 target_include_directories(whisper_android PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR})
 
-# Link libraries
+target_include_directories(llama_android PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR})
+
+# Link libraries for Whisper
 target_link_libraries(whisper_android
+    ${log-lib}
+    ${android-lib})
+
+# Link libraries for LLaMA
+target_link_libraries(llama_android
     ${log-lib}
     ${android-lib})
 
@@ -31,9 +43,20 @@ target_compile_options(whisper_android PRIVATE
     -ffast-math
     -DNDEBUG)
 
-# In real implementation, would link CTranslate2 libraries:
+target_compile_options(llama_android PRIVATE
+    -O3
+    -ffast-math
+    -DNDEBUG)
+
+# In real implementation, would link actual libraries:
 # target_link_libraries(whisper_android
 #     ctranslate2
 #     openblas
+#     ${log-lib}
+#     ${android-lib})
+#
+# target_link_libraries(llama_android
+#     llama
+#     ggml
 #     ${log-lib}
 #     ${android-lib})

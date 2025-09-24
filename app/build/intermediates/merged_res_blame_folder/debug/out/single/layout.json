@@ -1,0 +1,42 @@
+[
+    {
+        "merged": "com.frozo.ambientscribe.app-mergeDebugResources-39:/layout/activity_main.xml",
+        "source": "com.frozo.ambientscribe.app-main-42:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.frozo.ambientscribe.app-mergeDebugResources-39:/layout/item_prescription_instructions.xml",
+        "source": "com.frozo.ambientscribe.app-main-42:/layout/item_prescription_instructions.xml"
+    },
+    {
+        "merged": "com.frozo.ambientscribe.app-mergeDebugResources-39:/layout/item_prescription_medication.xml",
+        "source": "com.frozo.ambientscribe.app-main-42:/layout/item_prescription_medication.xml"
+    },
+    {
+        "merged": "com.frozo.ambientscribe.app-mergeDebugResources-39:/layout/dialog_confidence_override.xml",
+        "source": "com.frozo.ambientscribe.app-main-42:/layout/dialog_confidence_override.xml"
+    },
+    {
+        "merged": "com.frozo.ambientscribe.app-mergeDebugResources-39:/layout/item_soap_editable_text.xml",
+        "source": "com.frozo.ambientscribe.app-main-42:/layout/item_soap_editable_text.xml"
+    },
+    {
+        "merged": "com.frozo.ambientscribe.app-mergeDebugResources-39:/layout/item_prescription_followup.xml",
+        "source": "com.frozo.ambientscribe.app-main-42:/layout/item_prescription_followup.xml"
+    },
+    {
+        "merged": "com.frozo.ambientscribe.app-mergeDebugResources-39:/layout/item_soap_section.xml",
+        "source": "com.frozo.ambientscribe.app-main-42:/layout/item_soap_section.xml"
+    },
+    {
+        "merged": "com.frozo.ambientscribe.app-mergeDebugResources-39:/layout/view_audio_processing_settings.xml",
+        "source": "com.frozo.ambientscribe.app-main-42:/layout/view_audio_processing_settings.xml"
+    },
+    {
+        "merged": "com.frozo.ambientscribe.app-mergeDebugResources-39:/layout/activity_review.xml",
+        "source": "com.frozo.ambientscribe.app-main-42:/layout/activity_review.xml"
+    },
+    {
+        "merged": "com.frozo.ambientscribe.app-mergeDebugResources-39:/layout/view_asr_error.xml",
+        "source": "com.frozo.ambientscribe.app-main-42:/layout/view_asr_error.xml"
+    }
+]

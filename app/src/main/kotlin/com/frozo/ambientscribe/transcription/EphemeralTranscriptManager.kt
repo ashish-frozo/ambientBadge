@@ -20,6 +20,7 @@ class EphemeralTranscriptManager(
     private val context: Context,
     private val metricsCollector: MetricsCollector? = null
 ) {
+    private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     companion object {
         private const val PREFS_NAME = "ephemeral_transcript_prefs"
         private const val KEY_HAS_PENDING_PURGE = "has_pending_purge"
@@ -29,7 +30,6 @@ class EphemeralTranscriptManager(
 
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private val auditLogger = AuditLogger(context)
-    private val coroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     
     private val isEphemeralModeActive = AtomicBoolean(false)
     private var currentSessionId: String? = null
@@ -121,20 +121,22 @@ class EphemeralTranscriptManager(
             clearPendingPurge()
             
             // Audit log the purge
-            auditLogger.logEvent(
-                eventType = "EPHEMERAL_SESSION_END",
-                message = "Ephemeral transcript session ended and purged",
-                metadata = mapOf(
-                    "session_id" to sessionId,
-                    "segment_count" to transcriptBuffer.size
+            coroutineScope.launch {
+                auditLogger.logEvent(
+                    eventType = "EPHEMERAL_SESSION_END",
+                    details = mapOf(
+                        "message" to "Ephemeral transcript session ended and purged",
+                        "session_id" to sessionId,
+                        "segment_count" to transcriptBuffer.size
+                    )
                 )
-            )
+            }
             
             // Log metrics
-            metricsCollector?.logMetricEvent("ephemeral_session_end", mapOf(
+            metricsCollector?.recordEvent("ephemeral_session_end", mapOf(
                 "session_id" to sessionId,
-                "segment_count" to transcriptBuffer.size,
-                "total_length" to transcriptBuffer.sumOf { it.length }
+                "segment_count" to transcriptBuffer.size.toString(),
+                "total_length" to transcriptBuffer.sumOf { it.length }.toString()
             ))
         }
         
@@ -159,21 +161,23 @@ class EphemeralTranscriptManager(
             Timber.w("Detected pending purge from crashed session: $sessionId")
             
             // Audit log the abandoned purge
-            auditLogger.logEvent(
-                eventType = "ABANDON_PURGE",
-                message = "Purged abandoned transcript after crash/restart",
-                metadata = mapOf(
-                    "session_id" to sessionId,
-                    "crash_timestamp" to timestamp,
-                    "recovery_timestamp" to System.currentTimeMillis()
+            coroutineScope.launch {
+                auditLogger.logEvent(
+                    eventType = "ABANDON_PURGE",
+                    details = mapOf(
+                        "message" to "Purged abandoned transcript after crash/restart",
+                        "session_id" to sessionId,
+                        "crash_timestamp" to timestamp,
+                        "recovery_timestamp" to System.currentTimeMillis()
+                    )
                 )
-            )
+            }
             
             // Log metrics
-            metricsCollector?.logMetricEvent("ephemeral_abandon_purge", mapOf(
+            metricsCollector?.recordEvent("ephemeral_abandon_purge", mapOf(
                 "session_id" to sessionId,
-                "crash_timestamp" to timestamp,
-                "recovery_timestamp" to System.currentTimeMillis()
+                "crash_timestamp" to timestamp.toString(),
+                "recovery_timestamp" to System.currentTimeMillis().toString()
             ))
             
             // Clear the pending purge
@@ -231,11 +235,15 @@ class EphemeralTranscriptManager(
         
         if (wasActive && sessionId != null) {
             // Audit log the force purge
-            auditLogger.logEvent(
-                eventType = "FORCE_PURGE",
-                message = "Emergency force purge of ephemeral transcript",
-                metadata = mapOf("session_id" to sessionId)
-            )
+            coroutineScope.launch {
+                auditLogger.logEvent(
+                    eventType = "FORCE_PURGE",
+                    details = mapOf(
+                        "message" to "Emergency force purge of ephemeral transcript",
+                        "session_id" to sessionId
+                    )
+                )
+            }
             
             Timber.w("Force purged ephemeral transcript session: $sessionId")
         }

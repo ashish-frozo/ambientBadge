@@ -57,6 +57,9 @@ class WakeLockTest {
             android.media.AudioRecord.getMinBufferSize(anyInt(), anyInt(), anyInt()) 
         }.thenReturn(4096)
         
+        // Close the static mock after setup
+        audioRecordMockedStatic.close()
+        
         // Create AudioCapture with mocked dependencies
         audioCapture = AudioCapture(mockContext)
     }

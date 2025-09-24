@@ -104,7 +104,7 @@ class EphemeralTranscriptManagerTest {
     }
 
     @Test
-    fun `endEphemeralSession should clear pending purge and buffers`() {
+    fun `endEphemeralSession should clear pending purge and buffers`() = runTest {
         // Given
         val sessionId = ephemeralTranscriptManager.startEphemeralSession()
         ephemeralTranscriptManager.addTranscriptSegment("Test transcript", 1, 1000L)
@@ -117,7 +117,7 @@ class EphemeralTranscriptManagerTest {
         verify(mockEditor).putBoolean(eq("has_pending_purge"), eq(false))
         verify(mockEditor).remove(eq("pending_session_id"))
         verify(mockEditor).remove(eq("crash_timestamp"))
-        verify(mockAuditLogger).logEvent(eq("EPHEMERAL_SESSION_END"), anyString(), any())
+        verify(mockAuditLogger).logEvent(eq("EPHEMERAL_SESSION_END"), mapOf("session_id" to sessionId))
         
         // Verify buffers cleared
         assertEquals("", ephemeralTranscriptManager.getCompleteTranscript())
@@ -125,7 +125,7 @@ class EphemeralTranscriptManagerTest {
     }
 
     @Test
-    fun `checkForPendingPurge should detect and handle crashed sessions`() {
+    fun `checkForPendingPurge should detect and handle crashed sessions`() = runTest {
         // Given
         whenever(mockSharedPreferences.getBoolean(eq("has_pending_purge"), any())).thenReturn(true)
         whenever(mockSharedPreferences.getString(eq("pending_session_id"), any())).thenReturn("crashed-session-id")
@@ -135,14 +135,14 @@ class EphemeralTranscriptManagerTest {
         val manager = EphemeralTranscriptManager(mockContext, mockMetricsCollector)
         
         // Then
-        verify(mockAuditLogger).logEvent(eq("ABANDON_PURGE"), anyString(), any())
+        verify(mockAuditLogger).logEvent(eq("ABANDON_PURGE"), mapOf("session_id" to "crashed-session-id"))
         verify(mockEditor).putBoolean(eq("has_pending_purge"), eq(false))
         verify(mockEditor).remove(eq("pending_session_id"))
         verify(mockEditor).remove(eq("crash_timestamp"))
     }
 
     @Test
-    fun `forcePurge should clear everything immediately`() {
+    fun `forcePurge should clear everything immediately`() = runTest {
         // Given
         val sessionId = ephemeralTranscriptManager.startEphemeralSession()
         ephemeralTranscriptManager.addTranscriptSegment("Test transcript", 1, 1000L)
@@ -151,7 +151,7 @@ class EphemeralTranscriptManagerTest {
         ephemeralTranscriptManager.forcePurge()
         
         // Then
-        verify(mockAuditLogger).logEvent(eq("FORCE_PURGE"), anyString(), any())
+        verify(mockAuditLogger).logEvent(eq("FORCE_PURGE"), mapOf("reason" to "manual"))
         assertEquals("", ephemeralTranscriptManager.getCompleteTranscript())
         assertFalse(ephemeralTranscriptManager.isEphemeralModeActive())
     }

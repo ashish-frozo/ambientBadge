@@ -152,11 +152,13 @@ class ASRAccuracyEvaluator(
             // Log metrics in pilot mode
             if (isPilotModeEnabled.get()) {
                 metricsCollector.logASRAccuracy(
-                    wer = wer,
-                    medF1Score = medF1,
-                    confidenceScore = confidenceScore,
-                    sampleId = sampleId,
-                    durationMs = durationMs
+                    accuracy = confidenceScore,
+                    metadata = mapOf(
+                        "wer" to wer.toString(),
+                        "med_f1_score" to medF1.toString(),
+                        "sample_id" to sampleId,
+                        "duration_ms" to durationMs.toString()
+                    )
                 )
             }
             
@@ -180,6 +182,6 @@ class ASRAccuracyEvaluator(
      * Get accuracy metrics summary
      */
     suspend fun getAccuracySummary(days: Int = 7): Result<Map<String, Any>> {
-        return metricsCollector.getMetricsSummary(days)
+        return Result.success(metricsCollector.getMetricsSummary())
     }
 }

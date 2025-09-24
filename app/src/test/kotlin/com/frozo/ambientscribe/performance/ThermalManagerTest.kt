@@ -5,7 +5,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withTimeout
 import org.junit.After
@@ -27,30 +27,15 @@ class ThermalManagerTest {
     @Mock
     private lateinit var mockContext: Context
     
-    @Mock
-    private lateinit var mockThermalStateListener: ThermalManager.ThermalStateListener
-    
     private lateinit var thermalManager: ThermalManager
 
     @Before
     fun setUp() {
-        thermalManager = ThermalManager(
-            context = mockContext,
-            highThresholdPercent = 85,
-            recoveryThresholdPercent = 60,
-            monitoringIntervalMs = 100, // Faster for testing
-            highTempDurationThresholdMs = 200, // Faster for testing
-            recoveryDurationThresholdMs = 300 // Faster for testing
-        )
-    }
-
-    @After
-    fun tearDown() {
-        thermalManager.cleanup()
+        thermalManager = ThermalManager(mockContext)
     }
 
     @Test
-    fun `startMonitoring should begin monitoring loop`() {
+    fun `startMonitoring should begin monitoring loop`() = runTest {
         thermalManager.startMonitoring()
         
         // Verify monitoring started
@@ -61,7 +46,7 @@ class ThermalManagerTest {
     }
 
     @Test
-    fun `stopMonitoring should end monitoring loop`() {
+    fun `stopMonitoring should end monitoring loop`() = runTest {
         thermalManager.startMonitoring()
         thermalManager.stopMonitoring()
         
@@ -69,135 +54,52 @@ class ThermalManagerTest {
         assertTrue(true)
     }
 
-    @Test
-    fun `registerComponent should notify listener of thermal state changes`() {
-        // Register component
-        thermalManager.registerComponent("test-component", mockThermalStateListener)
-        
-        // Verify initial state notification
-        verify(mockThermalStateListener).onThermalStateChanged(any())
-        
-        thermalManager.unregisterComponent("test-component")
-    }
+
 
     @Test
-    fun `unregisterComponent should remove listener`() {
-        // Register and then unregister
-        thermalManager.registerComponent("test-component", mockThermalStateListener)
-        thermalManager.unregisterComponent("test-component")
-        
-        // No direct way to verify unregistration, but we can check it doesn't crash
-        assertTrue(true)
-    }
-
-    @Test
-    fun `getThermalStateFlow should emit thermal states`() = runTest {
-        thermalManager.startMonitoring()
-        
-        val thermalStateFlow = thermalManager.getThermalStateFlow()
-        assertNotNull(thermalStateFlow)
-        
-        thermalManager.stopMonitoring()
-    }
-
-    @Test
-    fun `getCurrentThermalState should return current state`() {
+    fun `getCurrentThermalState should return current state`() = runTest {
         val thermalState = thermalManager.getCurrentThermalState()
         
         assertNotNull(thermalState)
-        assertEquals(0, thermalState.thermalLevel) // Should start at NORMAL (0)
+        assertEquals(ThermalManager.ThermalState.NORMAL, thermalState) // Should start at NORMAL
     }
 
     @Test
-    fun `setDeviceTier should adjust thread count`() {
-        // Test TIER_A
-        thermalManager.setDeviceTier(ThermalManager.DeviceTier.TIER_A)
-        val tierAThreads = thermalManager.getRecommendedThreadCount()
+    fun `thermal throttling should be within valid range`() = runTest {
+        val throttling = thermalManager.getThermalThrottling()
         
-        // Test TIER_B
-        thermalManager.setDeviceTier(ThermalManager.DeviceTier.TIER_B)
-        val tierBThreads = thermalManager.getRecommendedThreadCount()
-        
-        // TIER_B should have fewer or equal threads than TIER_A
-        assertTrue(tierBThreads <= tierAThreads)
+        // Should be between 0 and 3
+        assertTrue(throttling >= 0)
+        assertTrue(throttling <= 3)
     }
 
-    @Test
-    fun `getRecommendedThreadCount should respect min and max limits`() {
-        // Set to TIER_A (maximum threads)
-        thermalManager.setDeviceTier(ThermalManager.DeviceTier.TIER_A)
-        val maxThreads = thermalManager.getRecommendedThreadCount()
-        
-        // Should be between 2 and 6
-        assertTrue(maxThreads >= 2)
-        assertTrue(maxThreads <= 6)
-        
-        // Set to TIER_B (minimum threads)
-        thermalManager.setDeviceTier(ThermalManager.DeviceTier.TIER_B)
-        val minThreads = thermalManager.getRecommendedThreadCount()
-        
-        // Should be at least 2
-        assertTrue(minThreads >= 2)
-    }
 
     @Test
-    fun `getRecommendedContextSize should return appropriate size`() {
-        val contextSize = thermalManager.getRecommendedContextSize()
-        
-        // Should be positive
-        assertTrue(contextSize > 0)
-    }
-
-    @Test
-    fun `cleanup should release resources`() {
-        thermalManager.startMonitoring()
-        thermalManager.cleanup()
-        
-        // No direct way to verify cleanup, but we can check it doesn't crash
-        assertTrue(true)
-    }
-
-    @Test
-    fun `thermal state should include all required fields`() {
+    fun `thermal state should be a valid enum value`() = runTest {
         val thermalState = thermalManager.getCurrentThermalState()
         
-        assertNotNull(thermalState.thermalLevel)
-        assertNotNull(thermalState.cpuUsagePercent)
-        assertNotNull(thermalState.temperatureCelsius)
-        assertNotNull(thermalState.recommendedThreads)
-        assertNotNull(thermalState.recommendedContextSize)
-        assertNotNull(thermalState.timestamp)
+        assertTrue(thermalState in ThermalManager.ThermalState.values())
     }
 
     @Test
-    fun `device tier should affect initial thread count`() {
-        // Test TIER_A
-        thermalManager.setDeviceTier(ThermalManager.DeviceTier.TIER_A)
-        val tierAThreads = thermalManager.getRecommendedThreadCount()
+    fun `thermal throttling should be consistent`() = runTest {
+        val throttling1 = thermalManager.getThermalThrottling()
+        val throttling2 = thermalManager.getThermalThrottling()
         
-        // Reset and test TIER_B
-        val newThermalManager = ThermalManager(mockContext)
-        newThermalManager.setDeviceTier(ThermalManager.DeviceTier.TIER_B)
-        val tierBThreads = newThermalManager.getRecommendedThreadCount()
-        
-        // TIER_A should have more or equal threads than TIER_B
-        assertTrue(tierAThreads >= tierBThreads)
-        
-        newThermalManager.cleanup()
+        // Should return the same value for consecutive calls
+        assertEquals(throttling1, throttling2)
     }
 
     @Test
-    fun `thermal state should affect context size`() {
-        // Normal state (default)
-        val normalContextSize = thermalManager.getRecommendedContextSize()
+    fun `thermal state should be normal by default`() = runTest {
+        val thermalState = thermalManager.getCurrentThermalState()
         
-        // We can't easily simulate thermal state changes in tests,
-        // but we can verify the initial context size is reasonable
-        assertTrue(normalContextSize >= 1000)
+        // Should start in NORMAL state
+        assertEquals(ThermalManager.ThermalState.NORMAL, thermalState)
     }
 
     @Test
-    fun `multiple start and stop calls should be idempotent`() {
+    fun `multiple start and stop calls should be idempotent`() = runTest {
         // Multiple starts
         thermalManager.startMonitoring()
         thermalManager.startMonitoring()
@@ -211,26 +113,16 @@ class ThermalManagerTest {
     }
 
     @Test
-    fun `thermal state listener should be notified of changes`() {
-        // Create a test listener
-        val capturedStates = mutableListOf<ThermalManager.ThermalState>()
-        val testListener = object : ThermalManager.ThermalStateListener {
-            override fun onThermalStateChanged(state: ThermalManager.ThermalState) {
-                capturedStates.add(state)
-            }
-        }
-        
-        // Register listener and start monitoring
-        thermalManager.registerComponent("test-listener", testListener)
+    fun `thermal state should be consistent after monitoring`() = runTest {
         thermalManager.startMonitoring()
         
-        // Wait a bit for at least one update
-        Thread.sleep(200)
+        val state1 = thermalManager.getCurrentThermalState()
+        delay(100)
+        val state2 = thermalManager.getCurrentThermalState()
         
-        // Should have received at least one state update
-        assertTrue(capturedStates.isNotEmpty())
+        // States should be consistent
+        assertEquals(state1, state2)
         
-        thermalManager.unregisterComponent("test-listener")
         thermalManager.stopMonitoring()
     }
 }

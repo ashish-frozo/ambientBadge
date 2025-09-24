@@ -25,8 +25,11 @@ class AudioTranscriptionPipeline(
     private val confidenceThreshold: Float = 0.6f,
     private val pilotMode: Boolean = false
 ) {
-    private val audioCapture = AudioCapture(context, vadThreshold)
+    private val coroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
+    private val metricsCollector = MetricsCollector(context)
     private val performanceManager = PerformanceManager(context)
+    private val audioProcessingConfig = AudioProcessingConfig(context, metricsCollector)
+    private val audioCapture = AudioCapture(context)
     private val asrService = ASRService(
         context, 
         confidenceThreshold = confidenceThreshold,
@@ -34,12 +37,9 @@ class AudioTranscriptionPipeline(
     )
     private val speakerDiarization = SpeakerDiarization(context)
     private val accuracyEvaluator = ASRAccuracyEvaluator(context, pilotMode)
-    private val metricsCollector = MetricsCollector(context)
-    private val audioProcessingConfig = AudioProcessingConfig(context, metricsCollector)
     private val ephemeralTranscriptManager = EphemeralTranscriptManager(context, metricsCollector)
     
     private val isRunning = AtomicBoolean(false)
-    private val coroutineScope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private var processingJob: Job? = null
     private val sessionId = UUID.randomUUID().toString()
     
@@ -50,9 +50,13 @@ class AudioTranscriptionPipeline(
     /**
      * Combined result from the audio transcription pipeline
      */
+    enum class VoiceActivityState {
+        SILENCE, SPEECH
+    }
+
     data class TranscriptionPipelineResult(
         val transcription: ASRService.TranscriptionResult,
-        val vadState: AudioCapture.VoiceActivityState,
+        val vadState: VoiceActivityState,
         val audioEnergyLevel: Float,
         val speakerId: Int
     )
@@ -80,8 +84,8 @@ class AudioTranscriptionPipeline(
             
             // Initialize audio capture
             val audioResult = audioCapture.initialize()
-            if (audioResult.isFailure) {
-                val exception = audioResult.exceptionOrNull() ?: Exception("Audio initialization failed")
+            if (audioResult == false) {
+                val exception = Exception("Audio initialization failed")
                 val error = ASRError.InitializationError(
                     message = "Failed to initialize audio capture: ${exception.message}",
                     cause = exception
@@ -93,7 +97,7 @@ class AudioTranscriptionPipeline(
             // Initialize ASR service
             val asrResult = asrService.initialize()
             if (asrResult.isFailure) {
-                val exception = asrResult.exceptionOrNull() ?: Exception("ASR initialization failed")
+                val exception = Exception("ASR initialization failed")
                 val error = ASRError.InitializationError(
                     message = "Failed to initialize ASR service: ${exception.message}",
                     cause = exception
@@ -150,8 +154,8 @@ class AudioTranscriptionPipeline(
             
             // Start audio capture
             val result = audioCapture.startRecording()
-            if (result.isFailure) {
-                val exception = result.exceptionOrNull() ?: Exception("Failed to start recording")
+            if (result == false) {
+                val exception = Exception("Failed to start recording")
                 val error = ASRError.AudioInputError(
                     message = "Failed to start audio recording: ${exception.message}",
                     cause = exception
@@ -197,8 +201,8 @@ class AudioTranscriptionPipeline(
             
             // Stop audio capture
             val result = audioCapture.stopRecording()
-            if (result.isFailure) {
-                val exception = result.exceptionOrNull() ?: Exception("Failed to stop recording")
+            if (result == false) {
+                val exception = Exception("Failed to stop recording")
                 return Result.failure(exception)
             }
             
@@ -413,9 +417,22 @@ class AudioTranscriptionPipeline(
             processingTimeMs = processingTimeMs,
             memoryUsageMb = 0f, // Would need to be measured
             cpuUsagePercent = performanceState.cpuUsagePercent.toFloat(),
+            thermalLevel = performanceState.thermalState,
             threadCount = performanceState.recommendedThreads,
             contextSize = performanceState.recommendedContextSize
         )
+    }
+
+    /**
+     * Calculate RMS energy level from audio samples
+     */
+    private fun calculateEnergyLevel(samples: ShortArray): Float {
+        var sum = 0.0
+        for (sample in samples) {
+            val normalized = sample / 32768.0 // Normalize to [-1, 1]
+            sum += normalized * normalized
+        }
+        return kotlin.math.sqrt(sum / samples.size).toFloat()
     }
     
     /**
@@ -426,33 +443,47 @@ class AudioTranscriptionPipeline(
         
         try {
             // Collect audio data and VAD state in parallel
-            val audioJob = launch {
-                audioCapture.getAudioDataFlow().collect { audioData ->
+            val audioJob = coroutineScope.launch {
+                audioCapture.getAudioFlow().collect { samples ->
                     // Process audio through ASR
-                    val asrResult = asrService.processAudio(audioData.samples)
+                    val asrResult = asrService.processAudio(samples.samples)
                     if (asrResult.isFailure) {
-                        Timber.w("ASR processing failed: ${asrResult.exceptionOrNull()}")
-                        val exception = asrResult.exceptionOrNull() ?: Exception("Unknown ASR error")
+                        val exception = Exception("ASR processing failed")
+                        Timber.w("ASR processing failed: $exception")
                         val error = ASRError.fromException(exception)
                         errorChannel.send(error)
                     }
+                    
+                    // Calculate energy level and VAD state
+                    val energyLevel = calculateEnergyLevel(samples.samples)
+                    val isVoiceActive = energyLevel > vadThreshold
+                    
+                    // Create audio data for diarization
+                    val audioData = SpeakerDiarization.AudioData(
+                        timestamp = System.currentTimeMillis(),
+                        energyLevel = energyLevel,
+                        isVoiceActive = isVoiceActive
+                    )
                     
                     // Process audio through speaker diarization
                     speakerDiarization.processAudioData(audioData)
                 }
             }
             
-            val vadJob = launch {
-                var currentVadState = AudioCapture.VoiceActivityState.SILENCE
+            val vadJob = coroutineScope.launch {
+                var currentVadState = VoiceActivityState.SILENCE
                 var currentEnergyLevel = 0f
                 
-                audioCapture.getVadStateFlow().collect { vadState ->
-                    currentVadState = vadState
-                    Timber.v("VAD state changed to: $vadState")
+                audioCapture.getAudioFlow().collect { samples ->
+                    val energyLevel = calculateEnergyLevel(samples.samples)
+                    val isVoiceActive = energyLevel > vadThreshold
+                    currentVadState = if (isVoiceActive) VoiceActivityState.SPEECH else VoiceActivityState.SILENCE
+                    currentEnergyLevel = energyLevel
+                    Timber.v("VAD state changed to: $currentVadState")
                 }
             }
             
-            val transcriptionJob = launch {
+            val transcriptionJob = coroutineScope.launch {
                 asrService.getTranscriptionFlow().collect { transcriptionResult ->
                     // Get current speaker ID
                     val currentSpeakerId = speakerDiarization.getCurrentSpeaker()
@@ -460,7 +491,7 @@ class AudioTranscriptionPipeline(
                     // Create pipeline result
                     val pipelineResult = TranscriptionPipelineResult(
                         transcription = transcriptionResult,
-                        vadState = AudioCapture.VoiceActivityState.SPEECH, // Simplified
+                        vadState = VoiceActivityState.SPEECH, // Simplified
                         audioEnergyLevel = 0.5f, // Simplified
                         speakerId = currentSpeakerId
                     )
@@ -483,7 +514,7 @@ class AudioTranscriptionPipeline(
                 }
             }
             
-            val diarizationJob = launch {
+            val diarizationJob = coroutineScope.launch {
                 speakerDiarization.getDiarizationFlow().collect { diarizationResult ->
                     val pipelineResult = DiarizationPipelineResult(
                         speakerId = diarizationResult.speakerId,

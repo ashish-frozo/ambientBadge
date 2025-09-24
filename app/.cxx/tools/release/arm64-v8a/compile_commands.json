@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/Users/ashishdhiman/Fzozo - Ambient_badge/app/.cxx/RelWithDebInfo/2jc3w2l4/arm64-v8a",
+  "command": "/Users/ashishdhiman/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++ --target=aarch64-none-linux-android29 --sysroot=/Users/ashishdhiman/Library/Android/sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dwhisper_android_EXPORTS -I\"/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp\" -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -O2 -g -DNDEBUG -fPIC -O3 -ffast-math -DNDEBUG -std=gnu++17 -o CMakeFiles/whisper_android.dir/whisper_android.cpp.o -c \"/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp\"",
+  "file": "/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp"
+}
+]

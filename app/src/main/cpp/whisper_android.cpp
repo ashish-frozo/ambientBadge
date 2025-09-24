@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <map>
 #include <android/log.h>
 
 // CTranslate2 includes (would be actual includes in real implementation)
@@ -13,6 +14,13 @@
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
 // Stub structures for demonstration
+struct AlignmentInfo {
+    std::string word;
+    float start_time;
+    float end_time;
+    float confidence;
+};
+
 struct WhisperModel {
     std::string model_path;
     bool initialized = false;
@@ -24,13 +32,6 @@ struct InferenceResult {
     std::string text;
     std::vector<float> log_probs;
     std::vector<AlignmentInfo> alignments;
-};
-
-struct AlignmentInfo {
-    std::string word;
-    float start_time;
-    float end_time;
-    float confidence;
 };
 
 // Global model storage (in real implementation, this would be more sophisticated)

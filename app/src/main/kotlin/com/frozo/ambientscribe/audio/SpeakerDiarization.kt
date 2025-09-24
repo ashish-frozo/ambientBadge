@@ -117,9 +117,18 @@ class SpeakerDiarization(
     )
     
     /**
+     * Audio data class for diarization
+     */
+    data class AudioData(
+        val timestamp: Long,
+        val energyLevel: Float,
+        val isVoiceActive: Boolean
+    )
+
+    /**
      * Process audio data for speaker diarization
      */
-    fun processAudioData(audioData: AudioCapture.AudioData) {
+    fun processAudioData(audioData: AudioData) {
         val timestamp = audioData.timestamp
         val energy = audioData.energyLevel
         val isVoiceActive = audioData.isVoiceActive

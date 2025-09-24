@@ -25,7 +25,7 @@ class AudioFormatTest {
         // Create test data (1 second of 48kHz audio)
         val inputData = ShortArray(48000) { 
             // Simple sine wave
-            (Short.MAX_VALUE * kotlin.math.sin(it * 2 * kotlin.math.PI / 48.0)).toShort()
+            ((Short.MAX_VALUE * kotlin.math.sin(it * 2 * kotlin.math.PI / 48.0)).toInt()).toShort()
         }
         
         // Resample to 16kHz

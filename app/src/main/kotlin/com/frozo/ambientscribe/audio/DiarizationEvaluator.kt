@@ -241,12 +241,12 @@ class DiarizationEvaluator(
                 // Log metrics
                 metricsCollector?.let {
                     coroutineScope.launch {
-                        it.logMetricEvent(
+                        it.recordEvent(
                             "diarization_quality_change",
                             mapOf(
                                 "quality" to newQuality.name,
-                                "der" to currentDER,
-                                "swap_accuracy" to currentSwapAccuracy
+                                "der" to currentDER.toString(),
+                                "swap_accuracy" to currentSwapAccuracy.toString()
                             )
                         )
                     }
@@ -306,11 +306,11 @@ class DiarizationEvaluator(
         // Log fallback event
         metricsCollector?.let {
             coroutineScope.launch {
-                it.logMetricEvent(
+                it.recordEvent(
                     "diarization_fallback_enabled",
                     mapOf(
-                        "der" to currentDER,
-                        "swap_accuracy" to currentSwapAccuracy,
+                        "der" to currentDER.toString(),
+                        "swap_accuracy" to currentSwapAccuracy.toString(),
                         "reason" to if (currentDER > DER_THRESHOLD_POOR) "high_der" else "low_swap_accuracy"
                     )
                 )

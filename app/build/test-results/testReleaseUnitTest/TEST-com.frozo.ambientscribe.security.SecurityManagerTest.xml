@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.frozo.ambientscribe.security.SecurityManagerTest" tests="8" skipped="0" failures="5" errors="0" timestamp="2025-09-22T12:30:13.027Z" hostname="Ashishs-Mac-mini.local" time="1.052">
+  <properties/>
+  <testcase name="testBiometricSession_ReuseWithinTimeout" classname="com.frozo.ambientscribe.security.SecurityManagerTest" time="0.918">
+    <failure message="android.content.res.Resources$NotFoundException: String resource ID #0x7f110029" type="android.content.res.Resources$NotFoundException">android.content.res.Resources$NotFoundException: String resource ID #0x7f110029
+	at android.content.res.Resources.getText(Resources.java:244)
+	at android.content.res.Resources.getString(Resources.java:330)
+	at android.content.Context.getString(Context.java:343)
+	at com.frozo.ambientscribe.security.SecurityManager.showBiometricPrompt(SecurityManager.kt:51)
+	at com.frozo.ambientscribe.security.SecurityManagerTest$testBiometricSession_ReuseWithinTimeout$1.invokeSuspend(SecurityManagerTest.kt:104)
+	at app//kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:108)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:280)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:85)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:59)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:38)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source)
+	at com.frozo.ambientscribe.security.SecurityManagerTest.testBiometricSession_ReuseWithinTimeout(SecurityManagerTest.kt:102)
+	at java.base@17.0.15/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base@17.0.15/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base@17.0.15/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at app//org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at app//org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at app//org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at app//org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at app//org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at app//org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at app//org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:588)
+	at app//org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:290)
+	at app//org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:101)
+	at java.base@17.0.15/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base@17.0.15/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base@17.0.15/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base@17.0.15/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="testAllowScreenCapture" classname="com.frozo.ambientscribe.security.SecurityManagerTest" time="0.088">
+    <failure message="java.lang.AssertionError: Verification failed: call 2 of 2: Window(child of #6#10).clearFlags(eq(8192))) was not called" type="java.lang.AssertionError">java.lang.AssertionError: Verification failed: call 2 of 2: Window(child of #6#10).clearFlags(eq(8192))) was not called
+	at io.mockk.impl.recording.states.VerifyingState.failIfNotPassed(VerifyingState.kt:63)
+	at io.mockk.impl.recording.states.VerifyingState.recordingDone(VerifyingState.kt:42)
+	at io.mockk.impl.recording.CommonCallRecorder.done(CommonCallRecorder.kt:47)
+	at io.mockk.impl.eval.RecordedBlockEvaluator.record(RecordedBlockEvaluator.kt:63)
+	at io.mockk.impl.eval.VerifyBlockEvaluator.verify(VerifyBlockEvaluator.kt:30)
+	at io.mockk.MockKDsl.internalVerify(API.kt:120)
+	at io.mockk.MockKKt.verify(MockK.kt:218)
+	at io.mockk.MockKKt.verify$default(MockK.kt:209)
+	at com.frozo.ambientscribe.security.SecurityManagerTest.testAllowScreenCapture(SecurityManagerTest.kt:60)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:588)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:290)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:101)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="testPreventScreenCapture" classname="com.frozo.ambientscribe.security.SecurityManagerTest" time="0.005">
+    <failure message="java.lang.AssertionError: Verification failed: call 2 of 2: Window(child of #12#16).setFlags(eq(8192), eq(8192))) was not called" type="java.lang.AssertionError">java.lang.AssertionError: Verification failed: call 2 of 2: Window(child of #12#16).setFlags(eq(8192), eq(8192))) was not called
+	at io.mockk.impl.recording.states.VerifyingState.failIfNotPassed(VerifyingState.kt:63)
+	at io.mockk.impl.recording.states.VerifyingState.recordingDone(VerifyingState.kt:42)
+	at io.mockk.impl.recording.CommonCallRecorder.done(CommonCallRecorder.kt:47)
+	at io.mockk.impl.eval.RecordedBlockEvaluator.record(RecordedBlockEvaluator.kt:63)
+	at io.mockk.impl.eval.VerifyBlockEvaluator.verify(VerifyBlockEvaluator.kt:30)
+	at io.mockk.MockKDsl.internalVerify(API.kt:120)
+	at io.mockk.MockKKt.verify(MockK.kt:218)
+	at io.mockk.MockKKt.verify$default(MockK.kt:209)
+	at com.frozo.ambientscribe.security.SecurityManagerTest.testPreventScreenCapture(SecurityManagerTest.kt:48)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:588)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:290)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:101)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="testBiometricAvailability_Success" classname="com.frozo.ambientscribe.security.SecurityManagerTest" time="0.022">
+    <failure message="java.lang.AssertionError: Expected value to be true." type="java.lang.AssertionError">java.lang.AssertionError: Expected value to be true.
+	at org.junit.Assert.fail(Assert.java:89)
+	at kotlin.test.junit.JUnitAsserter.fail(JUnitSupport.kt:56)
+	at kotlin.test.Asserter$DefaultImpls.assertTrue(Assertions.kt:652)
+	at kotlin.test.junit.JUnitAsserter.assertTrue(JUnitSupport.kt:30)
+	at kotlin.test.Asserter$DefaultImpls.assertTrue(Assertions.kt:662)
+	at kotlin.test.junit.JUnitAsserter.assertTrue(JUnitSupport.kt:30)
+	at kotlin.test.AssertionsKt__AssertionsKt.assertTrue(Assertions.kt:44)
+	at kotlin.test.AssertionsKt.assertTrue(Unknown Source)
+	at kotlin.test.AssertionsKt__AssertionsKt.assertTrue$default(Assertions.kt:42)
+	at kotlin.test.AssertionsKt.assertTrue$default(Unknown Source)
+	at com.frozo.ambientscribe.security.SecurityManagerTest.testBiometricAvailability_Success(SecurityManagerTest.kt:71)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:588)
+	at org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:290)
+	at org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:101)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <testcase name="testBiometricAvailability_HardwareUnavailable" classname="com.frozo.ambientscribe.security.SecurityManagerTest" time="0.006"/>
+  <testcase name="testBiometricAvailability_NoneEnrolled" classname="com.frozo.ambientscribe.security.SecurityManagerTest" time="0.004"/>
+  <testcase name="testBiometricAvailability_NoHardware" classname="com.frozo.ambientscribe.security.SecurityManagerTest" time="0.005"/>
+  <testcase name="testBiometricSession_ExpiredTimeout" classname="com.frozo.ambientscribe.security.SecurityManagerTest" time="0.004">
+    <failure message="android.content.res.Resources$NotFoundException: String resource ID #0x7f110029" type="android.content.res.Resources$NotFoundException">android.content.res.Resources$NotFoundException: String resource ID #0x7f110029
+	at android.content.res.Resources.getText(Resources.java:244)
+	at android.content.res.Resources.getString(Resources.java:330)
+	at android.content.Context.getString(Context.java:343)
+	at com.frozo.ambientscribe.security.SecurityManager.showBiometricPrompt(SecurityManager.kt:51)
+	at com.frozo.ambientscribe.security.SecurityManagerTest$testBiometricSession_ExpiredTimeout$1.invokeSuspend(SecurityManagerTest.kt:115)
+	at app//kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:108)
+	at kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:280)
+	at kotlinx.coroutines.BlockingCoroutine.joinBlocking(Builders.kt:85)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking(Builders.kt:59)
+	at kotlinx.coroutines.BuildersKt.runBlocking(Unknown Source)
+	at kotlinx.coroutines.BuildersKt__BuildersKt.runBlocking$default(Builders.kt:38)
+	at kotlinx.coroutines.BuildersKt.runBlocking$default(Unknown Source)
+	at com.frozo.ambientscribe.security.SecurityManagerTest.testBiometricSession_ExpiredTimeout(SecurityManagerTest.kt:113)
+	at java.base@17.0.15/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base@17.0.15/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base@17.0.15/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at app//org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at app//org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at app//org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at app//org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at app//org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at app//org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at app//org.robolectric.RobolectricTestRunner$HelperTestRunner$1.evaluate(RobolectricTestRunner.java:588)
+	at app//org.robolectric.internal.SandboxTestRunner$2.lambda$evaluate$2(SandboxTestRunner.java:290)
+	at app//org.robolectric.internal.bytecode.Sandbox.lambda$runOnMainThread$0(Sandbox.java:101)
+	at java.base@17.0.15/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base@17.0.15/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base@17.0.15/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base@17.0.15/java.lang.Thread.run(Thread.java:840)
+</failure>
+  </testcase>
+  <system-out><![CDATA[WARN: Bad identifier when getting value for resource number 0x7f110029
+WARN: Bad identifier when getting value for resource number 0x7f110029
+]]></system-out>
+  <system-err><![CDATA[SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+]]></system-err>
+</testsuite>

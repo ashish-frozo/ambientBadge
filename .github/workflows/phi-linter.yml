@@ -1,0 +1,44 @@
+name: PHI Linter
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  phi-linter:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install PHI detection tools
+      run: |
+        pip install regex
+        pip install gitpython
+    
+    - name: Run PHI Linter
+      run: |
+        python scripts/phi_linter.py
+    
+    - name: Check PHI violations
+      run: |
+        if [ -f phi_violations.txt ] && [ -s phi_violations.txt ]; then
+          echo "❌ PHI violations detected:"
+          cat phi_violations.txt
+          exit 1
+        else
+          echo "✅ No PHI violations detected"
+        fi

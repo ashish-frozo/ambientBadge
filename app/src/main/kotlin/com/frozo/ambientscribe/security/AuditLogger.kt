@@ -16,7 +16,7 @@ import javax.crypto.spec.SecretKeySpec
 
 /**
  * Secure audit logging system with HMAC-chaining for tamper-evident logs.
- * Used to track security-sensitive operations like audio data purging.
+ * Implements AuditEvent v1.0 schema with proper key management and chaining.
  */
 class AuditLogger(private val context: Context) {
 
@@ -25,76 +25,83 @@ class AuditLogger(private val context: Context) {
         private const val AUDIT_FILE_PREFIX = "audit_"
         private const val HMAC_ALGORITHM = "HmacSHA256"
         private const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        private const val KEY_ROTATION_INTERVAL = 90L * 24 * 60 * 60 * 1000 // 90 days
         
-        // Event types
-        const val EVENT_PURGE_BUFFER = "PURGE_BUFFER"
-        const val EVENT_PURGE_30S = "PURGE_30S"
-        const val EVENT_SESSION_END = "SESSION_END"
-        const val EVENT_CONSENT_ON = "CONSENT_ON"
-        const val EVENT_CONSENT_OFF = "CONSENT_OFF"
+        // Current key ID (rotates every 90 days)
+        private val currentKid = "kid-2025Q3"
     }
 
     // In-memory previous hash for HMAC chaining
     private var previousHash: String? = null
     private val dateFormat = SimpleDateFormat(DATE_FORMAT, Locale.US)
     
-    // Temporary key for HMAC (in production, this would be securely stored)
-    private val hmacKey = "temporary_hmac_key_for_development_only".toByteArray()
+    // HMAC key management with rotation
+    private val hmacKeyManager = HMACKeyManager(context)
     
     /**
-     * Log an audit event
+     * Log an audit event using AuditEvent v1.0 schema
+     */
+    suspend fun logEvent(
+        encounterId: String,
+        eventType: AuditEvent.AuditEventType,
+        actor: AuditEvent.AuditActor = AuditEvent.AuditActor.APP,
+        meta: Map<String, Any> = emptyMap()
+    ): Result<String> = withContext(Dispatchers.IO) {
+        try {
+            val timestamp = System.currentTimeMillis()
+            val formattedDate = dateFormat.format(Date(timestamp))
+            
+            // Create AuditEvent v1.0
+            val auditEvent = AuditEvent(
+                encounterId = encounterId,
+                kid = currentKid,
+                prevHash = previousHash ?: "null",
+                event = eventType,
+                ts = formattedDate,
+                actor = actor,
+                meta = meta
+            )
+            
+            // Generate HMAC for this event
+            val eventContent = auditEvent.toJsonString()
+            val hmac = calculateHmac(eventContent)
+            
+            // Create final event with HMAC
+            val finalEvent = eventContent.removeSuffix("}") + ",\"hmac\":\"$hmac\"}"
+            
+            // Save the current HMAC as previous hash for next event
+            previousHash = hmac
+            
+            // Write to audit file
+            writeAuditEvent(finalEvent)
+            
+            Timber.i("Audit event logged: ${eventType.name} for encounter $encounterId")
+            Result.success(encounterId)
+            
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to log audit event")
+            Result.failure(e)
+        }
+    }
+    
+    /**
+     * Legacy method for backward compatibility
      */
     suspend fun logEvent(
         eventType: String,
         details: Map<String, Any> = emptyMap(),
         sessionId: String = UUID.randomUUID().toString()
     ): Result<String> = withContext(Dispatchers.IO) {
-        try {
-            val timestamp = System.currentTimeMillis()
-            val formattedDate = dateFormat.format(Date(timestamp))
-            val eventId = UUID.randomUUID().toString()
-            
-            // Create audit event JSON
-            val eventJson = JSONObject().apply {
-                put("event_id", eventId)
-                put("event_type", eventType)
-                put("timestamp", timestamp)
-                put("formatted_timestamp", formattedDate)
-                put("session_id", sessionId)
-                
-                // Add boot ID and monotonic timestamp for wall-clock jump detection
-                put("boot_id", getBootId())
-                put("monotonic_timestamp", getMonotonicTimestamp())
-                
-                // Add all details
-                val detailsJson = JSONObject()
-                details.forEach { (key, value) ->
-                    detailsJson.put(key, value.toString())
-                }
-                put("details", detailsJson)
-                
-                // Add previous hash for HMAC chaining
-                put("prev_hash", previousHash ?: "null")
-                
-                // Generate HMAC for this event
-                val eventContent = toString()
-                val hmac = calculateHmac(eventContent)
-                put("hmac", hmac)
-            }
-            
-            // Save the current HMAC as previous hash for next event
-            previousHash = eventJson.getString("hmac")
-            
-            // Write to audit file
-            writeAuditEvent(eventJson.toString())
-            
-            Timber.i("Audit event logged: $eventType")
-            Result.success(eventId)
-            
-        } catch (e: Exception) {
-            Timber.e(e, "Failed to log audit event")
-            Result.failure(e)
+        val auditEventType = when (eventType) {
+            EVENT_PURGE_BUFFER -> AuditEvent.AuditEventType.PURGE_BUFFER
+            EVENT_PURGE_30S -> AuditEvent.AuditEventType.PURGE_30S
+            EVENT_SESSION_END -> AuditEvent.AuditEventType.SESSION_END
+            EVENT_CONSENT_ON -> AuditEvent.AuditEventType.CONSENT_ON
+            EVENT_CONSENT_OFF -> AuditEvent.AuditEventType.CONSENT_OFF
+            else -> AuditEvent.AuditEventType.ERROR
         }
+        
+        logEvent(sessionId, auditEventType, AuditEvent.AuditActor.APP, details)
     }
     
     /**
@@ -117,11 +124,11 @@ class AuditLogger(private val context: Context) {
     }
     
     /**
-     * Calculate HMAC for event content
+     * Calculate HMAC for event content using current key
      */
     private fun calculateHmac(content: String): String {
         val mac = Mac.getInstance(HMAC_ALGORITHM)
-        val secretKey = SecretKeySpec(hmacKey, HMAC_ALGORITHM)
+        val secretKey = hmacKeyManager.getCurrentKey()
         mac.init(secretKey)
         
         val hmacBytes = mac.doFinal(content.toByteArray())

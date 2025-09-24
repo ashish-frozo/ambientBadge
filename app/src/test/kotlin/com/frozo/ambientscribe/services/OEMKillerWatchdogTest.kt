@@ -123,7 +123,7 @@ class OEMKillerWatchdogTest {
     }
 
     @Test
-    fun `abnormal termination should be detected`() {
+    fun `abnormal termination should be detected`() = runTest {
         // Given
         whenever(mockSharedPreferences.getBoolean("was_running", false)).thenReturn(true)
         whenever(mockSharedPreferences.getLong("last_heartbeat", 0L)).thenReturn(900L) // Recent heartbeat
@@ -147,7 +147,7 @@ class OEMKillerWatchdogTest {
     }
 
     @Test
-    fun `autoRestart should clear abnormal termination flag`() {
+    fun `autoRestart should clear abnormal termination flag`() = runTest {
         // Given
         whenever(mockSharedPreferences.getBoolean("abnormal_termination", false)).thenReturn(true)
         

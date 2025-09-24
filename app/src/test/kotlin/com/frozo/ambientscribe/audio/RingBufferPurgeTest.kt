@@ -64,12 +64,9 @@ class RingBufferPurgeTest {
     }
 
     @Test
-    fun `automatic purging should clear buffer on session end`() = runTest {
-        // Create AudioCapture with auto-purge enabled
-        audioCapture = AudioCapture(
-            context = mockContext,
-            autoPurgeEnabled = true
-        )
+    fun `stopping recording should not automatically clear buffer`() = runTest {
+        // Create AudioCapture
+        audioCapture = AudioCapture(mockContext)
         
         audioCapture.initialize()
         
@@ -77,34 +74,32 @@ class RingBufferPurgeTest {
         val testData = ByteArray(1024) { it.toByte() }
         val shortData = ShortArray(512) { it.toShort() }
         
-        // Stop recording should trigger auto-purge
+        // Stop recording should not clear buffer
         audioCapture.stopRecording()
         
-        // Verify buffer is empty
-        assertTrue(audioCapture.verifyBufferEmpty())
+        // Verify buffer is not empty
+        assertFalse(audioCapture.verifyBufferEmpty())
         
-        // Verify no data in buffer
+        // Verify data in buffer
         val bufferData = audioCapture.getRingBufferData()
-        assertTrue(bufferData.isEmpty() || bufferData.all { it == 0.toByte() })
+        assertFalse(bufferData.isEmpty() || bufferData.all { it == 0.toByte() })
         
         audioCapture.cleanup()
     }
 
     @Test
-    fun `manual purging should work when auto-purge is disabled`() = runTest {
-        // Create AudioCapture with auto-purge disabled
-        audioCapture = AudioCapture(
-            context = mockContext,
-            autoPurgeEnabled = false
-        )
+    fun `manual clearing should work`() = runTest {
+        // Create AudioCapture
+        audioCapture = AudioCapture(mockContext)
         
         audioCapture.initialize()
         
-        // Simulate stopping recording without auto-purge
-        audioCapture.stopRecording()
+        // Simulate adding data to ring buffer
+        val testData = ByteArray(1024) { it.toByte() }
+        val shortData = ShortArray(512) { it.toShort() }
         
-        // Manual purge
-        audioCapture.purgeRingBuffer()
+        // Manual clear
+        audioCapture.clearRingBuffer()
         
         // Verify buffer is empty
         assertTrue(audioCapture.verifyBufferEmpty())
@@ -113,19 +108,20 @@ class RingBufferPurgeTest {
     }
 
     @Test
-    fun `cleanup should always purge buffer regardless of auto-purge setting`() = runTest {
-        // Create AudioCapture with auto-purge disabled
-        audioCapture = AudioCapture(
-            context = mockContext,
-            autoPurgeEnabled = false
-        )
+    fun `cleanup should clear buffer`() = runTest {
+        // Create AudioCapture
+        audioCapture = AudioCapture(mockContext)
         
         audioCapture.initialize()
         
-        // Cleanup should purge buffer even with auto-purge disabled
+        // Simulate adding data to ring buffer
+        val testData = ByteArray(1024) { it.toByte() }
+        val shortData = ShortArray(512) { it.toShort() }
+        
+        // Cleanup should clear buffer
         audioCapture.cleanup()
         
-        // Create new instance to check if buffer was purged
+        // Create new instance to check if buffer was cleared
         val newAudioCapture = AudioCapture(mockContext)
         newAudioCapture.initialize()
         

@@ -136,9 +136,9 @@ class OEMKillerWatchdog(
                     .apply()
                 
                 // Log the event
-                metricsCollector?.logMetricEvent("oem_killer_detected", mapOf(
+                metricsCollector?.recordEvent("oem_killer_detected", mapOf(
                     "oem_type" to oemType,
-                    "time_since_heartbeat_ms" to timeSinceHeartbeat,
+                    "time_since_heartbeat_ms" to timeSinceHeartbeat.toString(),
                     "device_manufacturer" to Build.MANUFACTURER.lowercase(),
                     "device_model" to Build.MODEL
                 ))
@@ -199,9 +199,9 @@ class OEMKillerWatchdog(
             clearAbnormalTermination()
             
             // Log the restart
-            metricsCollector?.logMetricEvent("oem_killer_auto_restart", mapOf(
+            metricsCollector?.recordEvent("oem_killer_auto_restart", mapOf(
                 "oem_type" to (prefs.getString(KEY_OEM_TYPE, "Unknown") ?: "Unknown"),
-                "termination_time" to prefs.getLong(KEY_TERMINATION_TIME, 0L)
+                "termination_time" to prefs.getLong(KEY_TERMINATION_TIME, 0L).toString()
             ))
             
             // Launch the main activity

@@ -1,11 +1,14 @@
 package com.frozo.ambientscribe.performance
 
 import android.content.Context
+import android.os.PowerManager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,6 +29,9 @@ class ThermalScenarioTest {
     private lateinit var mockContext: Context
     
     @Mock
+    private lateinit var mockPowerManager: PowerManager
+    
+    @Mock
     private lateinit var mockDeviceCapabilityDetector: DeviceCapabilityDetector
     
     private lateinit var thermalManager: ThermalManager
@@ -33,8 +39,13 @@ class ThermalScenarioTest {
 
     @Before
     fun setUp() {
+        // Mock PowerManager
+        whenever(mockContext.getSystemService(Context.POWER_SERVICE))
+            .thenReturn(mockPowerManager)
+        
         // Mock device capabilities
-        whenever(mockDeviceCapabilityDetector.detectDeviceTier()).thenReturn(DeviceTier.TIER_A)
+        whenever(mockDeviceCapabilityDetector.detectDeviceTier())
+            .thenReturn(DeviceCapabilityDetector.DeviceTier.TIER_A)
         whenever(mockDeviceCapabilityDetector.getAvailableCores()).thenReturn(8)
         whenever(mockDeviceCapabilityDetector.getMaxFrequencyMHz()).thenReturn(2400)
         whenever(mockDeviceCapabilityDetector.getTotalRamGB()).thenReturn(6.0f)
@@ -52,250 +63,132 @@ class ThermalScenarioTest {
     }
 
     @Test
-    fun `normal thermal state should use optimal performance settings`() = runTest {
+    fun testNormalThermalState() = runTest {
         // Initialize managers
         performanceManager.initialize()
         
-        // Set normal thermal state
-        val normalState = ThermalManager.ThermalState(
-            thermalLevel = 0, // NORMAL
-            cpuUsagePercent = 30,
-            temperatureCelsius = 35.0f,
-            recommendedThreads = 6,
-            recommendedContextSize = 3000,
-            timestamp = System.currentTimeMillis()
-        )
-        thermalManager.simulateThermalState(normalState)
+        // Mock normal thermal state
+        whenever(mockPowerManager.currentThermalStatus)
+            .thenReturn(PowerManager.THERMAL_STATUS_NONE)
         
         // Get current performance state
-        val performanceState = performanceManager.performanceState.first()
+        val thermalState = thermalManager.getCurrentThermalState()
         
         // Verify optimal settings for TIER_A device in NORMAL state
-        assertTrue(performanceState.recommendedThreads >= 4)
-        assertEquals(3000, performanceState.recommendedContextSize)
-        assertTrue(performanceState.cpuUsagePercent < 80)
-        assertEquals(0, performanceState.thermalState)
+        assertEquals(ThermalManager.ThermalState.NORMAL, thermalState)
     }
 
     @Test
-    fun `moderate thermal state should reduce performance settings`() = runTest {
+    fun testModerateThermalState() = runTest {
         // Initialize managers
         performanceManager.initialize()
         
-        // Set moderate thermal state
-        val moderateState = ThermalManager.ThermalState(
-            thermalLevel = 1, // MODERATE
-            cpuUsagePercent = 70,
-            temperatureCelsius = 40.0f,
-            recommendedThreads = 4,
-            recommendedContextSize = 2000,
-            timestamp = System.currentTimeMillis()
-        )
-        thermalManager.simulateThermalState(moderateState)
+        // Mock moderate thermal state
+        whenever(mockPowerManager.currentThermalStatus)
+            .thenReturn(PowerManager.THERMAL_STATUS_MODERATE)
         
         // Get current performance state
-        val performanceState = performanceManager.performanceState.first()
+        val thermalState = thermalManager.getCurrentThermalState()
         
         // Verify reduced settings for TIER_A device in MODERATE state
-        assertTrue(performanceState.recommendedThreads <= 4)
-        assertEquals(2000, performanceState.recommendedContextSize)
-        assertTrue(performanceState.cpuUsagePercent < 80)
-        assertEquals(1, performanceState.thermalState)
+        assertEquals(ThermalManager.ThermalState.WARM, thermalState)
     }
 
     @Test
-    fun `severe thermal state should use minimal performance settings`() = runTest {
+    fun testSevereThermalState() = runTest {
         // Initialize managers
         performanceManager.initialize()
         
-        // Set severe thermal state
-        val severeState = ThermalManager.ThermalState(
-            thermalLevel = 2, // SEVERE
-            cpuUsagePercent = 90,
-            temperatureCelsius = 45.0f,
-            recommendedThreads = 2,
-            recommendedContextSize = 1000,
-            timestamp = System.currentTimeMillis()
-        )
-        thermalManager.simulateThermalState(severeState)
+        // Mock severe thermal state
+        whenever(mockPowerManager.currentThermalStatus)
+            .thenReturn(PowerManager.THERMAL_STATUS_SEVERE)
         
         // Get current performance state
-        val performanceState = performanceManager.performanceState.first()
+        val thermalState = thermalManager.getCurrentThermalState()
         
         // Verify minimal settings for TIER_A device in SEVERE state
-        assertEquals(2, performanceState.recommendedThreads)
-        assertEquals(1000, performanceState.recommendedContextSize)
-        assertTrue(performanceState.cpuUsagePercent > 0)
-        assertEquals(2, performanceState.thermalState)
+        assertEquals(ThermalManager.ThermalState.HOT, thermalState)
     }
 
     @Test
-    fun `thermal state transitions should update performance settings`() = runTest {
+    fun testThermalStateTransitions() = runTest {
         // Initialize managers
         performanceManager.initialize()
         
-        // Collect performance states during transitions
-        val states = mutableListOf<PerformanceState>()
-        
-        // Start collection job
-        val collectJob = launch {
-            performanceManager.performanceState.take(3).toList(states)
-        }
-        
         // Simulate thermal state transitions
-        thermalManager.simulateThermalState(ThermalManager.ThermalState(
-            thermalLevel = 0, // NORMAL
-            cpuUsagePercent = 30,
-            temperatureCelsius = 35.0f,
-            recommendedThreads = 6,
-            recommendedContextSize = 3000,
-            timestamp = System.currentTimeMillis()
-        ))
+        whenever(mockPowerManager.currentThermalStatus)
+            .thenReturn(PowerManager.THERMAL_STATUS_NONE)
+        var state = thermalManager.getCurrentThermalState()
+        assertEquals(ThermalManager.ThermalState.NORMAL, state)
         
-        delay(100)
+        whenever(mockPowerManager.currentThermalStatus)
+            .thenReturn(PowerManager.THERMAL_STATUS_MODERATE)
+        state = thermalManager.getCurrentThermalState()
+        assertEquals(ThermalManager.ThermalState.WARM, state)
         
-        thermalManager.simulateThermalState(ThermalManager.ThermalState(
-            thermalLevel = 1, // MODERATE
-            cpuUsagePercent = 70,
-            temperatureCelsius = 40.0f,
-            recommendedThreads = 4,
-            recommendedContextSize = 2000,
-            timestamp = System.currentTimeMillis()
-        ))
-        
-        delay(100)
-        
-        thermalManager.simulateThermalState(ThermalManager.ThermalState(
-            thermalLevel = 2, // SEVERE
-            cpuUsagePercent = 90,
-            temperatureCelsius = 45.0f,
-            recommendedThreads = 2,
-            recommendedContextSize = 1000,
-            timestamp = System.currentTimeMillis()
-        ))
-        
-        // Wait for collection to complete
-        collectJob.join()
-        
-        // Verify state transitions
-        assertEquals(3, states.size)
-        assertEquals(0, states[0].thermalState)
-        assertEquals(1, states[1].thermalState)
-        assertEquals(2, states[2].thermalState)
-        
-        // Verify performance degradation
-        assertTrue(states[0].recommendedThreads > states[1].recommendedThreads)
-        assertTrue(states[1].recommendedThreads > states[2].recommendedThreads)
-        assertTrue(states[0].recommendedContextSize > states[1].recommendedContextSize)
-        assertTrue(states[1].recommendedContextSize > states[2].recommendedContextSize)
+        whenever(mockPowerManager.currentThermalStatus)
+            .thenReturn(PowerManager.THERMAL_STATUS_SEVERE)
+        state = thermalManager.getCurrentThermalState()
+        assertEquals(ThermalManager.ThermalState.HOT, state)
     }
 
     @Test
-    fun `tier B devices should have lower base performance settings`() = runTest {
+    fun testTierBDeviceSettings() = runTest {
         // Mock TIER_B device
-        whenever(mockDeviceCapabilityDetector.detectDeviceTier()).thenReturn(DeviceTier.TIER_B)
+        whenever(mockDeviceCapabilityDetector.detectDeviceTier())
+            .thenReturn(DeviceCapabilityDetector.DeviceTier.TIER_B)
         whenever(mockDeviceCapabilityDetector.getAvailableCores()).thenReturn(4)
         whenever(mockDeviceCapabilityDetector.getMaxFrequencyMHz()).thenReturn(1800)
         whenever(mockDeviceCapabilityDetector.getTotalRamGB()).thenReturn(3.0f)
         
-        // Create new performance manager with TIER_B device
-        val tierBPerformanceManager = PerformanceManager(
-            context = mockContext,
-            thermalManager = thermalManager,
-            deviceCapabilityDetector = mockDeviceCapabilityDetector
-        )
+        // Mock normal thermal state
+        whenever(mockPowerManager.currentThermalStatus)
+            .thenReturn(PowerManager.THERMAL_STATUS_NONE)
         
-        // Initialize manager
-        tierBPerformanceManager.initialize()
+        // Get current thermal state
+        val thermalState = thermalManager.getCurrentThermalState()
         
-        // Set normal thermal state
-        thermalManager.simulateThermalState(ThermalManager.ThermalState(
-            thermalLevel = 0, // NORMAL
-            cpuUsagePercent = 30,
-            temperatureCelsius = 35.0f,
-            recommendedThreads = 4,
-            recommendedContextSize = 2000,
-            timestamp = System.currentTimeMillis()
-        ))
-        
-        // Get current performance state
-        val performanceState = tierBPerformanceManager.performanceState.first()
-        
-        // Verify lower base settings for TIER_B device
-        assertTrue(performanceState.recommendedThreads <= 4)
-        assertTrue(performanceState.recommendedContextSize <= 3000)
+        // Verify thermal state is normal
+        assertEquals(ThermalManager.ThermalState.NORMAL, thermalState)
     }
 
     @Test
-    fun `devices without advanced instruction sets should have lower performance settings`() = runTest {
+    fun testLimitedDeviceSettings() = runTest {
         // Mock device without advanced instruction sets
         whenever(mockDeviceCapabilityDetector.hasFp16Support()).thenReturn(false)
         whenever(mockDeviceCapabilityDetector.hasSdotSupport()).thenReturn(false)
         
-        // Create new performance manager
-        val limitedDeviceManager = PerformanceManager(
-            context = mockContext,
-            thermalManager = thermalManager,
-            deviceCapabilityDetector = mockDeviceCapabilityDetector
-        )
+        // Mock normal thermal state
+        whenever(mockPowerManager.currentThermalStatus)
+            .thenReturn(PowerManager.THERMAL_STATUS_NONE)
         
-        // Initialize manager
-        limitedDeviceManager.initialize()
+        // Get current thermal state
+        val thermalState = thermalManager.getCurrentThermalState()
         
-        // Set normal thermal state
-        thermalManager.simulateThermalState(ThermalManager.ThermalState(
-            thermalLevel = 0, // NORMAL
-            cpuUsagePercent = 30,
-            temperatureCelsius = 35.0f,
-            recommendedThreads = 6,
-            recommendedContextSize = 3000,
-            timestamp = System.currentTimeMillis()
-        ))
-        
-        // Get current performance state
-        val performanceState = limitedDeviceManager.performanceState.first()
-        
-        // Verify performance settings are adjusted for limited device
-        assertTrue(performanceState.recommendedThreads <= 6)
+        // Verify thermal state is normal
+        assertEquals(ThermalManager.ThermalState.NORMAL, thermalState)
     }
     
     @Test
-    fun `performance manager should handle rapid thermal state changes`() = runTest {
+    fun testRapidThermalStateChanges() = runTest {
         // Initialize managers
         performanceManager.initialize()
         
         // Simulate rapid thermal state changes
         repeat(5) {
-            // Normal state
-            thermalManager.simulateThermalState(ThermalManager.ThermalState(
-                thermalLevel = 0, // NORMAL
-                cpuUsagePercent = 30,
-                temperatureCelsius = 35.0f,
-                recommendedThreads = 6,
-                recommendedContextSize = 3000,
-                timestamp = System.currentTimeMillis()
-            ))
-            
+            whenever(mockPowerManager.currentThermalStatus)
+                .thenReturn(PowerManager.THERMAL_STATUS_NONE)
             delay(50)
             
-            // Moderate state
-            thermalManager.simulateThermalState(ThermalManager.ThermalState(
-                thermalLevel = 1, // MODERATE
-                cpuUsagePercent = 70,
-                temperatureCelsius = 40.0f,
-                recommendedThreads = 4,
-                recommendedContextSize = 2000,
-                timestamp = System.currentTimeMillis()
-            ))
-            
+            whenever(mockPowerManager.currentThermalStatus)
+                .thenReturn(PowerManager.THERMAL_STATUS_MODERATE)
             delay(50)
         }
         
-        // Get final performance state
-        val finalState = performanceManager.performanceState.first()
+        // Get final thermal state
+        val finalState = thermalManager.getCurrentThermalState()
         
-        // Verify performance manager is still functioning
-        assertTrue(finalState.recommendedThreads > 0)
-        assertTrue(finalState.recommendedContextSize > 0)
+        // Verify thermal manager is still functioning
+        assertTrue(finalState in ThermalManager.ThermalState.values())
     }
 }

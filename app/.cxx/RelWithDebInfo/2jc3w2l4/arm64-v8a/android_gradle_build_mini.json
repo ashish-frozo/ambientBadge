@@ -1,0 +1,27 @@
+{
+  "buildFiles": [
+    "/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/ashishdhiman/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/ashishdhiman/Fzozo - Ambient_badge/app/.cxx/RelWithDebInfo/2jc3w2l4/arm64-v8a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/ashishdhiman/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/ashishdhiman/Fzozo - Ambient_badge/app/.cxx/RelWithDebInfo/2jc3w2l4/arm64-v8a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "whisper_android::@6890427a1f51a3e7e1df": {
+      "artifactName": "whisper_android",
+      "abi": "arm64-v8a",
+      "output": "/Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/cxx/RelWithDebInfo/2jc3w2l4/obj/arm64-v8a/libwhisper_android.so",
+      "runtimeFiles": []
+    }
+  }
+}

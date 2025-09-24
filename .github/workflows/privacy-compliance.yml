@@ -1,0 +1,68 @@
+name: Privacy Policy Compliance Check
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 3 * * 1'  # Weekly on Monday at 3 AM
+
+jobs:
+  privacy-compliance:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: Install dependencies
+      run: |
+        pip install requests
+    
+    - name: Run Privacy Policy Compliance Check
+      run: |
+        python scripts/privacy_policy_checker.py
+    
+    - name: Upload compliance evidence
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: privacy-compliance-evidence
+        path: privacy_evidence/
+        retention-days: 90
+    
+    - name: Comment PR with compliance results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          let comment = '## 🔒 Privacy Policy Compliance Check\n\n';
+          
+          if (fs.existsSync('privacy_evidence/')) {
+            const evidenceFiles = fs.readdirSync('privacy_evidence/');
+            const latestReport = evidenceFiles
+              .filter(f => f.endsWith('.txt'))
+              .sort()
+              .pop();
+            
+            if (latestReport) {
+              const reportContent = fs.readFileSync(`privacy_evidence/${latestReport}`, 'utf8');
+              comment += '### Latest Compliance Report\n```\n' + reportContent + '\n```\n\n';
+            }
+          }
+          
+          comment += '### Evidence Files\n';
+          comment += 'Compliance evidence has been archived and is available in the workflow artifacts.\n';
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });

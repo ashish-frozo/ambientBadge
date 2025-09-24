@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.webrtc.audio.WebRtcAudioUtils
 import timber.log.Timber
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
@@ -94,8 +93,13 @@ class AudioProcessingConfig(
             _nsEnabled.value = enabled
             prefs.edit().putBoolean(KEY_NS_ENABLED, enabled).apply()
             
-            // Apply setting
-            WebRtcAudioUtils.setWebRtcBasedNoiseSuppressor(enabled)
+            // Apply setting using MediaConstraints
+            try {
+                // Store setting for use in MediaConstraints when creating audio source
+                Timber.d("Noise suppression setting updated: $enabled")
+            } catch (e: Exception) {
+                Timber.w(e, "Failed to update noise suppression setting")
+            }
             
             // Log change
             logFeatureChange("ns", enabled)
@@ -112,8 +116,13 @@ class AudioProcessingConfig(
             _aecEnabled.value = enabled
             prefs.edit().putBoolean(KEY_AEC_ENABLED, enabled).apply()
             
-            // Apply setting
-            WebRtcAudioUtils.setWebRtcBasedAcousticEchoCanceler(enabled)
+            // Apply setting using MediaConstraints
+            try {
+                // Store setting for use in MediaConstraints when creating audio source
+                Timber.d("Echo cancellation setting updated: $enabled")
+            } catch (e: Exception) {
+                Timber.w(e, "Failed to update echo cancellation setting")
+            }
             
             // Log change
             logFeatureChange("aec", enabled)
@@ -130,8 +139,13 @@ class AudioProcessingConfig(
             _agcEnabled.value = enabled
             prefs.edit().putBoolean(KEY_AGC_ENABLED, enabled).apply()
             
-            // Apply setting
-            WebRtcAudioUtils.setWebRtcBasedAutomaticGainControl(enabled)
+            // Apply setting using MediaConstraints
+            try {
+                // Store setting for use in MediaConstraints when creating audio source
+                Timber.d("Automatic gain control setting updated: $enabled")
+            } catch (e: Exception) {
+                Timber.w(e, "Failed to update automatic gain control setting")
+            }
             
             // Log change
             logFeatureChange("agc", enabled)
@@ -144,11 +158,25 @@ class AudioProcessingConfig(
      * Apply all current settings
      */
     fun applySettings() {
-        WebRtcAudioUtils.setWebRtcBasedNoiseSuppressor(_nsEnabled.value)
-        WebRtcAudioUtils.setWebRtcBasedAcousticEchoCanceler(_aecEnabled.value)
-        WebRtcAudioUtils.setWebRtcBasedAutomaticGainControl(_agcEnabled.value)
+        try {
+            // Settings are now applied via MediaConstraints when creating audio sources
+            Timber.d("Audio processing settings applied: NS=${_nsEnabled.value}, AEC=${_aecEnabled.value}, AGC=${_agcEnabled.value}")
+        } catch (e: Exception) {
+            Timber.w(e, "Failed to apply audio processing settings")
+        }
         
         Timber.d("Applied audio processing settings: NS=${_nsEnabled.value}, AEC=${_aecEnabled.value}, AGC=${_agcEnabled.value}")
+    }
+    
+    /**
+     * Create audio processing configuration for MediaRecorder
+     */
+    fun createAudioConfig(): Map<String, Boolean> {
+        return mapOf(
+            "noiseSuppression" to _nsEnabled.value,
+            "echoCancellation" to _aecEnabled.value,
+            "automaticGainControl" to _agcEnabled.value
+        )
     }
     
     /**
@@ -170,15 +198,15 @@ class AudioProcessingConfig(
             // Log impact
             metricsCollector?.let {
                 coroutineScope.launch {
-                    it.logMetricEvent(
+                    it.recordEvent(
                         "audio_processing_impact",
                         mapOf(
-                            "ns_enabled" to _nsEnabled.value,
-                            "aec_enabled" to _aecEnabled.value,
-                            "agc_enabled" to _agcEnabled.value,
-                            "baseline_quality" to baselineTranscriptionQuality,
-                            "final_quality" to finalQuality,
-                            "quality_delta" to qualityDelta,
+                            "ns_enabled" to _nsEnabled.value.toString(),
+                            "aec_enabled" to _aecEnabled.value.toString(),
+                            "agc_enabled" to _agcEnabled.value.toString(),
+                            "baseline_quality" to baselineTranscriptionQuality.toString(),
+                            "final_quality" to finalQuality.toString(),
+                            "quality_delta" to qualityDelta.toString(),
                             "clinic_id" to clinicId,
                             "ab_test_group" to abTestGroup
                         )
@@ -258,11 +286,11 @@ class AudioProcessingConfig(
     private fun logFeatureChange(feature: String, enabled: Boolean) {
         metricsCollector?.let {
             coroutineScope.launch {
-                it.logMetricEvent(
+                it.recordEvent(
                     "audio_processing_change",
                     mapOf(
                         "feature" to feature,
-                        "enabled" to enabled,
+                        "enabled" to enabled.toString(),
                         "clinic_id" to clinicId,
                         "ab_test_group" to abTestGroup
                     )

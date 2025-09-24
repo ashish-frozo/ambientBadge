@@ -1,44 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Ambient Scribe</string>
-    <string name="initializing_audio">Initializing audio capture…</string>
-    <string name="recording_active">Recording active</string>
-    <string name="recording_stopped">Recording stopped</string>
-    <string name="audio_permission_required">Audio recording permission is required</string>
-    <string name="audio_init_failed">Failed to initialize audio capture</string>
-    <string name="recording_start_failed">Failed to start recording</string>
+
+    <!-- Main Activity -->
+    <string name="transcription_hint">Transcription will appear here</string>
     <string name="start_recording">Start Recording</string>
-    <string name="stop_recording">Stop Recording</string>
     <string name="swap_roles">Swap Roles</string>
-    <string name="transcription_hint">Transcription will appear here…</string>
-    <string name="doctor_label">Doctor</string>
-    <string name="patient_label">Patient</string>
-    <string name="unknown_speaker">Unknown Speaker</string>
-    <string name="roles_swapped">Speaker roles swapped</string>
     <string name="delete_last_30s">Delete Last 30s</string>
-    <string name="audio_purged">Audio data purged</string>
-    <string name="buffer_verified_empty">Audio buffer verified empty</string>
-    <string name="buffer_not_empty_warning">Warning: Audio buffer not empty!</string>
-    
-    <!-- ASR Error Strings -->
+    <string name="ephemeral_mode">Ephemeral Mode</string>
+    <string name="roles_swapped">Doctor/Patient roles swapped</string>
+    <string name="audio_purged">Last 30 seconds of audio deleted</string>
+    <string name="buffer_not_empty_warning">Audio buffer is not empty</string>
+
+    <!-- Review Activity -->
+    <string name="review_encounter">Review Encounter</string>
+    <string name="confidence_overview">Confidence Overview</string>
+    <string name="soap_note_review">SOAP Note Review</string>
+    <string name="soap_review_subtitle">Review and edit the generated SOAP note</string>
+    <string name="prescription_review">Prescription Review</string>
+    <string name="prescription_review_subtitle">Review and edit the generated prescription</string>
+    <string name="export_pdf">Export PDF</string>
+    <string name="approve_complete">Approve &amp; Complete</string>
+    <string name="action_abandon">Abandon Session</string>
+    <string name="action_help">Help</string>
+    <string name="add_soap_item">Add Item</string>
+
+    <!-- Confidence Dialog -->
+    <string name="confidence_override_description">Override the confidence level for this item</string>
+    <string name="confidence_low">Low Confidence</string>
+    <string name="confidence_medium">Medium Confidence</string>
+    <string name="confidence_high">High Confidence</string>
+    <string name="confidence_green">High Confidence</string>
+    <string name="confidence_amber">Medium Confidence</string>
+    <string name="confidence_red">Low Confidence</string>
+
+    <!-- Prescription Items -->
+    <string name="follow_up_instructions">Follow-up Instructions</string>
+    <string name="general_instructions">General Instructions</string>
+    <string name="generic">Generic</string>
+    <string name="override">Override</string>
+    <string name="delete_medication">Delete Medication</string>
+    <string name="medication_name">Medication Name</string>
+    <string name="dosage">Dosage</string>
+    <string name="frequency">Frequency</string>
+    <string name="duration">Duration</string>
+    <string name="special_instructions">Special Instructions</string>
+
+    <!-- SOAP Items -->
+    <string name="delete_item">Delete Item</string>
+    <string name="add_item">Add Item</string>
+
+    <!-- Error Messages -->
+    <string name="error_empty_registration">Registration number is required</string>
+    <string name="error_invalid_state">Invalid state code</string>
+    <string name="error_invalid_format">Invalid registration number format</string>
+    <string name="error_invalid_length">Invalid registration number length</string>
+    <string name="error_invalid_checksum">Invalid registration number checksum</string>
+    <string name="error_icon_description">Error Icon</string>
     <string name="retry">Retry</string>
-    <string name="error_icon_description">Error icon</string>
     <string name="network_error_title">Network Error</string>
-    <string name="thermal_error_title">Device Overheating</string>
-    <string name="decoder_error_title">Transcription Error</string>
-    <string name="audio_error_title">Audio Input Error</string>
-    <string name="permission_error_title">Permission Error</string>
+    <string name="thermal_error_title">Device Too Hot</string>
+    <string name="decoder_error_title">Decoder Error</string>
+    <string name="audio_error_title">Audio Error</string>
+    <string name="permission_error_title">Permission Required</string>
     <string name="resource_error_title">Resource Error</string>
     <string name="initialization_error_title">Initialization Error</string>
     <string name="unknown_error_title">Unknown Error</string>
-    
-    <!-- Audio Processing Settings -->
+
+    <!-- Audio Settings -->
     <string name="audio_processing_settings">Audio Processing Settings</string>
     <string name="noise_suppression">Noise Suppression</string>
     <string name="echo_cancellation">Echo Cancellation</string>
     <string name="automatic_gain_control">Automatic Gain Control</string>
-    <string name="audio_processing_info">Changes will take effect immediately. Settings are saved per clinic.</string>
-    
-    <!-- Ephemeral Mode -->
-    <string name="ephemeral_mode">Ephemeral Mode (RAM-only, purged on exit)</string>
+    <string name="audio_processing_info">These settings affect audio quality and performance</string>
+
+    <!-- Accessibility -->
+    <string name="subjective_section_desc">Subjective section of SOAP note</string>
+    <string name="objective_section_desc">Objective section of SOAP note</string>
+    <string name="assessment_section_desc">Assessment section of SOAP note</string>
+    <string name="plan_section_desc">Plan section of SOAP note</string>
+    <string name="prescription_section_desc">Prescription section</string>
+
+    <!-- AHS Acknowledgement -->
+    <string name="ahs_acknowledgement_format">I, %1$s (%2$s), acknowledge that this prescription was generated with AI assistance and has been reviewed for accuracy on %3$s.</string>
+
+    <!-- Security -->
+    <string name="authentication_required">Authentication Required</string>
+    <string name="verify_identity">Verify your identity to continue</string>
+    <string name="cancel">Cancel</string>
+    <string name="export_blocked">Export Blocked</string>
+    <string name="export_blocked_message">Cannot export: QR verification failed or encryption key missing</string>
 </resources>

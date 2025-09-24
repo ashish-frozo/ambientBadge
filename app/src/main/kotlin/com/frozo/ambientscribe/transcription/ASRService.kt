@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.AssetManager
 import com.frozo.ambientscribe.performance.PerformanceManager
 import com.frozo.ambientscribe.performance.ThermalManager
+import com.frozo.ambientscribe.performance.ThermalStateListener
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +31,7 @@ class ASRService(
     private val modelName: String = "whisper-tiny-int8",
     private val confidenceThreshold: Float = 0.6f,
     private val performanceManager: PerformanceManager? = null
-) : ThermalManager.ThermalStateListener {
+) : ThermalStateListener {
     companion object {
         private const val SAMPLE_RATE = 16000
         private const val CHUNK_DURATION_MS = 3000L // 3 second chunks
@@ -488,13 +489,31 @@ class ASRService(
      * Handle thermal state changes
      */
     override fun onThermalStateChanged(state: ThermalManager.ThermalState) {
-        // Update thread count and context size based on thermal state
-        val newThreadCount = state.recommendedThreads
-        val newContextSize = state.recommendedContextSize
+        // Convert enum to numeric value for logging
+        val thermalLevel = when (state) {
+            ThermalManager.ThermalState.NORMAL -> 0
+            ThermalManager.ThermalState.WARM -> 1
+            ThermalManager.ThermalState.HOT -> 2
+            ThermalManager.ThermalState.CRITICAL -> 3
+        }
+        
+        // Update thread count and context size based on thermal state (mock implementation)
+        val newThreadCount = when (state) {
+            ThermalManager.ThermalState.NORMAL -> 4
+            ThermalManager.ThermalState.WARM -> 3
+            ThermalManager.ThermalState.HOT -> 2
+            ThermalManager.ThermalState.CRITICAL -> 1
+        }
+        val newContextSize = when (state) {
+            ThermalManager.ThermalState.NORMAL -> 3000
+            ThermalManager.ThermalState.WARM -> 2000
+            ThermalManager.ThermalState.HOT -> 1000
+            ThermalManager.ThermalState.CRITICAL -> 500
+        }
         
         // Only log if values changed
         if (threadCount != newThreadCount || contextSize != newContextSize) {
-            Timber.d("Thermal state changed: level=${state.thermalLevel}, " +
+            Timber.d("Thermal state changed: level=$thermalLevel, " +
                     "threads: $threadCount -> $newThreadCount, " +
                     "context: $contextSize -> $newContextSize")
             
@@ -507,7 +526,7 @@ class ASRService(
             }
             
             // Emit thermal error for severe thermal state
-            if (state.thermalLevel == 2) { // SEVERE
+            if (thermalLevel >= 2) { // HOT or CRITICAL
                 val error = ASRError.ThermalError(
                     message = "Device overheating, transcription quality reduced",
                     errorCode = ASRError.ERROR_CPU_THERMAL

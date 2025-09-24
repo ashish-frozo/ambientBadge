@@ -13,6 +13,7 @@ import org.mockito.Mockito.*
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -31,9 +32,9 @@ class DiarizationAcceptanceTest {
     private lateinit var speakerDiarization: SpeakerDiarization
 
     @Before
-    fun setUp() {
+    fun setUp() = runTest {
         // Mock metrics collector
-        whenever(mockMetricsCollector.logMetricEvent(any(), any())).thenReturn(Result.success("test-event-id"))
+        whenever(mockMetricsCollector.logMetricEvent(any(), any())).thenReturn(Result.success(Unit))
         
         // Create evaluator with mocked dependencies
         diarizationEvaluator = DiarizationEvaluator(mockContext, mockMetricsCollector)
@@ -131,18 +132,16 @@ class DiarizationAcceptanceTest {
     @Test
     fun `single-speaker mode should prevent speaker changes`() = runTest {
         // Create audio data with varying energy levels
-        val lowEnergyAudio = AudioCapture.AudioData(
-            samples = ShortArray(100) { 100 },
+        val lowEnergyAudio = SpeakerDiarization.AudioData(
             timestamp = System.currentTimeMillis(),
-            isVoiceActive = true,
-            energyLevel = 0.1f
+            energyLevel = 0.1f,
+            isVoiceActive = true
         )
         
-        val highEnergyAudio = AudioCapture.AudioData(
-            samples = ShortArray(100) { 1000 },
+        val highEnergyAudio = SpeakerDiarization.AudioData(
             timestamp = System.currentTimeMillis() + 1000,
-            isVoiceActive = true,
-            energyLevel = 0.8f
+            energyLevel = 0.8f,
+            isVoiceActive = true
         )
         
         // Process first speaker (doctor)

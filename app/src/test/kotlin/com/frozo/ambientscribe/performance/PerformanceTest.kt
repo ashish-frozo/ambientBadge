@@ -4,6 +4,8 @@ import android.content.Context
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.coroutineScope
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -27,8 +29,9 @@ class PerformanceTest {
 
     @Before
     fun setUp() {
-        performanceManager = PerformanceManager(mockContext)
         deviceCapabilityDetector = DeviceCapabilityDetector(mockContext)
+        val thermalManager = ThermalManager(mockContext)
+        performanceManager = PerformanceManager(mockContext, thermalManager, deviceCapabilityDetector)
     }
 
     @After
@@ -40,7 +43,7 @@ class PerformanceTest {
     fun `initialize should detect device capabilities`() {
         performanceManager.initialize()
         
-        val state = performanceManager.performanceState.value
+        val state = performanceManager.getCurrentPerformanceState()
         assertNotNull(state)
         assertNotNull(state.deviceTier)
         assertTrue(state.recommendedThreads >= 2)
@@ -86,7 +89,7 @@ class PerformanceTest {
     fun `performance state should include all required fields`() {
         performanceManager.initialize()
         
-        val state = performanceManager.performanceState.value
+        val state = performanceManager.getCurrentPerformanceState()
         assertNotNull(state.deviceTier)
         assertNotNull(state.thermalState)
         assertNotNull(state.cpuUsagePercent)
@@ -100,18 +103,18 @@ class PerformanceTest {
     @Test
     fun `device capability detector should classify devices`() {
         // This test is more of an integration test but useful for verification
-        val tier = deviceCapabilityDetector.detectDeviceTier()
+        val tier = deviceCapabilityDetector.getDeviceTier()
         
         // Should be either TIER_A or TIER_B
         assertTrue(
-            tier == ThermalManager.DeviceTier.TIER_A || 
-            tier == ThermalManager.DeviceTier.TIER_B
+            tier == DeviceCapabilityDetector.DeviceTier.TIER_A || 
+            tier == DeviceCapabilityDetector.DeviceTier.TIER_B
         )
     }
 
     @Test
     fun `optimal thread count should be within valid range`() {
-        val threadCount = deviceCapabilityDetector.detectOptimalThreadCount()
+        val threadCount = performanceManager.getRecommendedThreadCount()
         
         assertTrue(threadCount >= 2)
         assertTrue(threadCount <= 6)
@@ -119,7 +122,8 @@ class PerformanceTest {
 
     @Test
     fun `instruction set detection should include NEON, FP16, and SDOT`() {
-        val instructionSets = deviceCapabilityDetector.detectAdvancedInstructionSets()
+        performanceManager.initialize()
+        val instructionSets = performanceManager.getCurrentPerformanceState().instructionSets
         
         assertTrue(instructionSets.containsKey("NEON"))
         assertTrue(instructionSets.containsKey("FP16"))
@@ -144,7 +148,7 @@ class PerformanceTest {
     }
     
     @Test
-    fun `benchmark simulated load with different thread counts`() {
+    fun `benchmark simulated load with different thread counts`() = runTest {
         // This is a simple benchmark simulation
         val results = mutableMapOf<Int, Long>()
         
@@ -164,20 +168,20 @@ class PerformanceTest {
         assertTrue(results.isNotEmpty())
     }
     
-    private fun simulateWorkload(threadCount: Int) {
+    private suspend fun simulateWorkload(threadCount: Int) {
         // Simple simulation of workload
         val workPerThread = 1000000 / threadCount
         
-        val threads = List(threadCount) {
-            Thread {
-                var sum = 0.0
-                for (i in 0 until workPerThread) {
-                    sum += Math.sin(i.toDouble())
+        coroutineScope {
+            val jobs = List(threadCount) {
+                launch {
+                    var sum = 0.0
+                    for (i in 0 until workPerThread) {
+                        sum += Math.sin(i.toDouble())
+                    }
                 }
             }
+            jobs.forEach { it.join() }
         }
-        
-        threads.forEach { it.start() }
-        threads.forEach { it.join() }
     }
 }

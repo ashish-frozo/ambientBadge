@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.frozo.ambientscribe.ai.PrescriptionValidatorTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2025-09-22T12:30:10.864Z" hostname="Ashishs-Mac-mini.local" time="0.015">
+  <properties/>
+  <testcase name="testMedicationWithEmptyName" classname="com.frozo.ambientscribe.ai.PrescriptionValidatorTest" time="0.007"/>
+  <testcase name="testValidMedication" classname="com.frozo.ambientscribe.ai.PrescriptionValidatorTest" time="0.001"/>
+  <testcase name="testMedicationWithEmptyDuration" classname="com.frozo.ambientscribe.ai.PrescriptionValidatorTest" time="0.001"/>
+  <testcase name="testMedicationWithEmptyDosage" classname="com.frozo.ambientscribe.ai.PrescriptionValidatorTest" time="0.0"/>
+  <testcase name="testMedicationWithAllFieldsEmpty" classname="com.frozo.ambientscribe.ai.PrescriptionValidatorTest" time="0.001"/>
+  <testcase name="testMedicationWithEmptyFrequency" classname="com.frozo.ambientscribe.ai.PrescriptionValidatorTest" time="0.001"/>
+  <testcase name="testMedicationWithEmptyInstructions" classname="com.frozo.ambientscribe.ai.PrescriptionValidatorTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

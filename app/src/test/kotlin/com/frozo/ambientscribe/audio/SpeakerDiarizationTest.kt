@@ -4,7 +4,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withTimeout
 import org.junit.After
@@ -312,7 +311,7 @@ class SpeakerDiarizationTest {
     }
 
     @Test
-    fun `diarization error rate should be within acceptable range`() {
+    fun `diarization error rate should be within acceptable range`() = runTest {
         // This test simulates a conversation and measures DER
         val timestamp = System.currentTimeMillis()
         
@@ -328,16 +327,14 @@ class SpeakerDiarizationTest {
         val finalAssignments = mutableMapOf<Long, Int>()
         val diarizationFlow = diarization.getDiarizationFlow()
         
-        runBlocking {
-            // Collect all diarization results
-            val results = withTimeout(1000) {
-                diarizationFlow.take(conversation.size).toList()
-            }
-            
-            // Map results to timestamps
-            results.forEach { result ->
-                finalAssignments[result.timestamp] = result.speakerId
-            }
+        // Collect all diarization results
+        val results = withTimeout(1000) {
+            diarizationFlow.take(conversation.size).toList()
+        }
+        
+        // Map results to timestamps
+        results.forEach { result ->
+            finalAssignments[result.timestamp] = result.speakerId
         }
         
         // Calculate error rate
@@ -368,12 +365,11 @@ class SpeakerDiarizationTest {
         isVoiceActive: Boolean,
         energy: Float,
         timestamp: Long
-    ): AudioCapture.AudioData {
-        return AudioCapture.AudioData(
-            samples = ShortArray(1600) { 0 },
+    ): SpeakerDiarization.AudioData {
+        return SpeakerDiarization.AudioData(
             timestamp = timestamp,
-            isVoiceActive = isVoiceActive,
-            energyLevel = energy
+            energyLevel = energy,
+            isVoiceActive = isVoiceActive
         )
     }
     
@@ -381,8 +377,8 @@ class SpeakerDiarizationTest {
      * Create a simulated conversation with known speaker turns
      * Returns pairs of (AudioData, ExpectedSpeakerId)
      */
-    private fun createTestConversation(baseTimestamp: Long): List<Pair<AudioCapture.AudioData, Int>> {
-        val result = mutableListOf<Pair<AudioCapture.AudioData, Int>>()
+    private fun createTestConversation(baseTimestamp: Long): List<Pair<SpeakerDiarization.AudioData, Int>> {
+        val result = mutableListOf<Pair<SpeakerDiarization.AudioData, Int>>()
         var timestamp = baseTimestamp
         
         // Doctor speaking (10 samples)
