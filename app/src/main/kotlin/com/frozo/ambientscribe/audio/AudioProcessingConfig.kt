@@ -53,13 +53,13 @@ class AudioProcessingConfig(
     private val deviceId: String = getOrCreateDeviceId()
     private var clinicId: String = prefs.getString(KEY_CLINIC_ID, "") ?: ""
     
-    // A/B test group
-    private val abTestGroup: String = getOrCreateAbTestGroup()
-    
-    // State flows for configuration
+    // State flows for configuration - Initialize first
     private val _nsEnabled = MutableStateFlow(prefs.getBoolean(KEY_NS_ENABLED, DEFAULT_NS_ENABLED))
     private val _aecEnabled = MutableStateFlow(prefs.getBoolean(KEY_AEC_ENABLED, DEFAULT_AEC_ENABLED))
     private val _agcEnabled = MutableStateFlow(prefs.getBoolean(KEY_AGC_ENABLED, DEFAULT_AGC_ENABLED))
+    
+    // A/B test group - Initialize after StateFlows
+    private val abTestGroup: String = getOrCreateAbTestGroup()
     
     val nsEnabled: StateFlow<Boolean> = _nsEnabled.asStateFlow()
     val aecEnabled: StateFlow<Boolean> = _aecEnabled.asStateFlow()
