@@ -1,0 +1,6 @@
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/androidTest/kotlin/com/frozo/ambientscribe/pdf/PDFIntegrationTest.kt
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/androidTest/kotlin/com/frozo/ambientscribe/integration/StrictModePolicyTest.kt
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/androidTest/kotlin/com/frozo/ambientscribe/ui/ReviewActivityTest.kt
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/androidTest/kotlin/com/frozo/ambientscribe/ui/AccessibilityTest.kt
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/androidTest/kotlin/com/frozo/ambientscribe/pdf/PrinterMatrixTest.kt
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/androidTest/kotlin/com/frozo/ambientscribe/ui/EditPersistenceTest.kt
