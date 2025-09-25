@@ -26,6 +26,8 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.whenever
 import java.io.ByteArrayOutputStream
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
@@ -66,6 +68,16 @@ class AudioCaptureTest {
         audioRecordMockedStatic.`when`<Int> { 
             AudioRecord.getMinBufferSize(anyInt(), anyInt(), anyInt()) 
         }.thenReturn(4096)
+
+        audioRecordMockedStatic.`when`<AudioRecord> {
+            AudioRecord(
+                eq(MediaRecorder.AudioSource.VOICE_RECOGNITION),
+                anyInt(),
+                eq(AudioFormat.CHANNEL_IN_MONO),
+                eq(AudioFormat.ENCODING_PCM_16BIT),
+                anyInt()
+            )
+        }.thenReturn(mockAudioRecord)
         
         // Mock AudioRecord instance
         whenever(mockAudioRecord.state).thenReturn(AudioRecord.STATE_INITIALIZED)
@@ -228,6 +240,39 @@ class AudioCaptureTest {
         
         // Stop recording
         audioCapture.stopRecording()
+    }
+
+    @Test
+    fun testRingBufferWrapAroundDoesNotOverflow() = runTest {
+        audioCapture.initialize()
+
+        val ringBufferField = AudioCapture::class.java.getDeclaredField("ringBuffer").apply { isAccessible = true }
+        val ringBufferSizeField = AudioCapture::class.java.getDeclaredField("ringBufferSize").apply { isAccessible = true }
+        val ringBufferPositionField = AudioCapture::class.java.getDeclaredField("ringBufferPosition").apply { isAccessible = true }
+        val bytesBufferedField = AudioCapture::class.java.getDeclaredField("bytesBuffered").apply { isAccessible = true }
+        val updateMethod = AudioCapture::class.java.getDeclaredMethod("updateRingBuffer", ByteArray::class.java, Int::class.javaPrimitiveType)
+            .apply { isAccessible = true }
+
+        val smallSize = 8
+        ringBufferSizeField.setInt(audioCapture, smallSize)
+        val ring = ByteBuffer.allocateDirect(smallSize).order(ByteOrder.LITTLE_ENDIAN)
+        ringBufferField.set(audioCapture, ring)
+        ringBufferPositionField.setInt(audioCapture, smallSize - 2)
+        bytesBufferedField.setInt(audioCapture, smallSize - 2)
+
+        val data = ByteArray(5) { (it + 1).toByte() }
+
+        updateMethod.invoke(audioCapture, data, data.size)
+
+        val expectedPosition = (smallSize - 2 + data.size) % smallSize
+        val newPosition = ringBufferPositionField.getInt(audioCapture)
+        assertEquals(expectedPosition, newPosition)
+
+        val bufferedBytes = bytesBufferedField.getInt(audioCapture)
+        assertEquals(smallSize, bufferedBytes)
+
+        val snapshot = audioCapture.getRingBufferData()
+        assertEquals(smallSize, snapshot.size)
     }
     
     @Test

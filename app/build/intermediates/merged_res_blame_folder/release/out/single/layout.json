@@ -1,42 +1,42 @@
 [
     {
-        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-39:/layout/dialog_confidence_override.xml",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/dialog_confidence_override.xml"
+        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-45:/layout/view_asr_error.xml",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/view_asr_error.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-39:/layout/view_asr_error.xml",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/view_asr_error.xml"
+        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-45:/layout/item_soap_editable_text.xml",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/item_soap_editable_text.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-39:/layout/item_prescription_instructions.xml",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/item_prescription_instructions.xml"
+        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-45:/layout/item_prescription_instructions.xml",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/item_prescription_instructions.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-39:/layout/activity_review.xml",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/activity_review.xml"
+        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-45:/layout/activity_main.xml",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/activity_main.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-39:/layout/view_audio_processing_settings.xml",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/view_audio_processing_settings.xml"
+        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-45:/layout/view_audio_processing_settings.xml",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/view_audio_processing_settings.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-39:/layout/item_prescription_medication.xml",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/item_prescription_medication.xml"
+        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-45:/layout/item_prescription_medication.xml",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/item_prescription_medication.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-39:/layout/item_prescription_followup.xml",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/item_prescription_followup.xml"
+        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-45:/layout/dialog_confidence_override.xml",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/dialog_confidence_override.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-39:/layout/item_soap_section.xml",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/item_soap_section.xml"
+        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-45:/layout/item_soap_section.xml",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/item_soap_section.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-39:/layout/activity_main.xml",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/activity_main.xml"
+        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-45:/layout/item_prescription_followup.xml",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/item_prescription_followup.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-39:/layout/item_soap_editable_text.xml",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/item_soap_editable_text.xml"
+        "merged": "com.frozo.ambientscribe.app-mergeReleaseResources-45:/layout/activity_review.xml",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/activity_review.xml"
     }
 ]

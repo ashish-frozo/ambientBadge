@@ -10,7 +10,9 @@ import com.frozo.ambientscribe.telemetry.MetricsCollector
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.shareIn
 import timber.log.Timber
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
@@ -442,9 +444,13 @@ class AudioTranscriptionPipeline(
         Timber.d("Starting audio stream processing")
         
         try {
+            val sharedAudioFlow = audioCapture
+                .getAudioFlow()
+                .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 0)
+
             // Collect audio data and VAD state in parallel
             val audioJob = coroutineScope.launch {
-                audioCapture.getAudioFlow().collect { samples ->
+                sharedAudioFlow.collect { samples ->
                     // Process audio through ASR
                     val asrResult = asrService.processAudio(samples.samples)
                     if (asrResult.isFailure) {
@@ -473,8 +479,8 @@ class AudioTranscriptionPipeline(
             val vadJob = coroutineScope.launch {
                 var currentVadState = VoiceActivityState.SILENCE
                 var currentEnergyLevel = 0f
-                
-                audioCapture.getAudioFlow().collect { samples ->
+
+                sharedAudioFlow.collect { samples ->
                     val energyLevel = calculateEnergyLevel(samples.samples)
                     val isVoiceActive = energyLevel > vadThreshold
                     currentVadState = if (isVoiceActive) VoiceActivityState.SPEECH else VoiceActivityState.SILENCE

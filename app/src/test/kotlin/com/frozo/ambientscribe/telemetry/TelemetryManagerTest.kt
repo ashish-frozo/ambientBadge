@@ -54,7 +54,7 @@ class TelemetryManagerTest {
         every { mockEventsFile.appendText(any()) } just Runs
         every { mockEventsFile.readLines() } returns emptyList()
         
-        telemetryManager = TelemetryManager(mockContext)
+        telemetryManager = TelemetryManager.getInstance(mockContext)
     }
     
     @Test

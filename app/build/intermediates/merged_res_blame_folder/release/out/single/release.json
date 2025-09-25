@@ -1,118 +1,118 @@
 [
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/menu_menu_review.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/menu/menu_review.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/layout_view_asr_error.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/view_asr_error.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/drawable_rounded_background_followup.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/drawable/rounded_background_followup.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/drawable/ic_launcher_background.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/layout_item_soap_section.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/item_soap_section.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/drawable_ic_launcher_background.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/drawable/ic_launcher_background.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/layout_item_soap_editable_text.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/item_soap_editable_text.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/layout_item_prescription_instructions.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/item_prescription_instructions.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/layout_activity_main.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/activity_main.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/drawable_ic_doctor.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/drawable/ic_doctor.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/drawable_ic_add.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/drawable/ic_add.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/drawable_ic_swap.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/drawable/ic_swap.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/drawable_ic_delete.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/drawable/ic_delete.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/drawable_recording_indicator.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/drawable/recording_indicator.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/drawable_ic_launcher_foreground.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/drawable/ic_launcher_foreground.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/drawable_ic_patient.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/drawable/ic_patient.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/layout_activity_review.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/activity_review.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/drawable_ic_check.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/drawable/ic_check.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/xml_network_security_config.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/xml/network_security_config.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/drawable/ic_launcher_foreground.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/drawable_ic_check.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/drawable/ic_check.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/layout_activity_review.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/activity_review.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/drawable_ic_picture_as_pdf.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/drawable/ic_picture_as_pdf.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/menu_menu_review.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/menu/menu_review.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/layout_item_soap_section.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/item_soap_section.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/drawable_ic_add.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/drawable/ic_add.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/drawable_recording_indicator.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/drawable/recording_indicator.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/drawable_ic_picture_as_pdf.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/drawable/ic_picture_as_pdf.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/layout_activity_main.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/activity_main.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/layout_view_asr_error.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/view_asr_error.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/drawable_rounded_background_outline.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/drawable/rounded_background_outline.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/drawable_ic_doctor.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/drawable/ic_doctor.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/layout_item_prescription_followup.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/item_prescription_followup.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/layout_item_prescription_followup.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/item_prescription_followup.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/layout_item_prescription_medication.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/item_prescription_medication.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/xml_backup_rules.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/xml/backup_rules.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/drawable_ic_delete.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/drawable/ic_delete.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/drawable_rounded_background_outline.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/drawable/rounded_background_outline.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/drawable_ic_help.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/drawable/ic_help.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/xml_data_extraction_rules.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/xml/data_extraction_rules.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/xml_data_extraction_rules.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/xml/data_extraction_rules.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/drawable_ic_help.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/drawable/ic_help.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/drawable_rounded_background_followup.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/drawable/rounded_background_followup.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/layout_view_audio_processing_settings.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/view_audio_processing_settings.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/layout_dialog_confidence_override.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/dialog_confidence_override.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/layout_item_prescription_medication.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/item_prescription_medication.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/layout_item_prescription_instructions.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/item_prescription_instructions.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/drawable_ic_patient.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/drawable/ic_patient.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/xml_network_security_config.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/xml/network_security_config.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/layout_dialog_confidence_override.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/dialog_confidence_override.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/layout_view_audio_processing_settings.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/layout/view_audio_processing_settings.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/layout_item_soap_editable_text.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/layout/item_soap_editable_text.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
     {
-        "merged": "com.frozo.ambientscribe.app-merged_res-40:/drawable_ic_swap.xml.flat",
-        "source": "com.frozo.ambientscribe.app-main-41:/drawable/ic_swap.xml"
+        "merged": "com.frozo.ambientscribe.app-merged_res-46:/xml_backup_rules.xml.flat",
+        "source": "com.frozo.ambientscribe.app-main-47:/xml/backup_rules.xml"
     }
 ]

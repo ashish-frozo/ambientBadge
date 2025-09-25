@@ -34,6 +34,7 @@ class AudioCapture(private val context: Context) {
     private var ringBuffer: ByteBuffer? = null
     private var ringBufferSize = 0
     private var ringBufferPosition = 0
+    private var bytesBuffered = 0
 
     /**
      * Initialize audio capture
@@ -53,6 +54,8 @@ class AudioCapture(private val context: Context) {
             ringBuffer = ByteBuffer.allocateDirect(ringBufferSize).apply {
                 order(ByteOrder.LITTLE_ENDIAN)
             }
+            ringBufferPosition = 0
+            bytesBuffered = 0
 
             // Create AudioRecord
             audioRecord = AudioRecord(
@@ -76,15 +79,19 @@ class AudioCapture(private val context: Context) {
     /**
      * Start recording
      */
-        suspend fun startRecording(): Boolean {
-            if (isRecording) {
-                return false
-            }
-            isRecording = true
-            return true
+    suspend fun startRecording(): Boolean {
+        val record = audioRecord ?: return false
+        if (record.state != AudioRecord.STATE_INITIALIZED) {
+            return false
         }
+        if (isRecording) {
+            return false
+        }
+        isRecording = true
+        return true
+    }
 
-        fun getAudioFlow(): Flow<AudioData> = flow {
+    fun getAudioFlow(): Flow<AudioData> = flow {
         try {
             if (!isRecording) {
                 return@flow
@@ -145,36 +152,15 @@ class AudioCapture(private val context: Context) {
      */
     suspend fun saveLast30Seconds(outputFile: File): Boolean = withContext(Dispatchers.IO) {
         try {
-            val buffer = ringBuffer ?: return@withContext false
+            val data = getRingBufferData()
+            if (data.isEmpty()) {
+                return@withContext false
+            }
 
             FileOutputStream(outputFile).use { output ->
-                // Write WAV header
-                writeWavHeader(output, ringBufferSize)
-
-                // Write ring buffer data
-                val currentPosition = ringBufferPosition
-                if (currentPosition > 0) {
-                    // Write from position to end
-                    buffer.position(currentPosition)
-                    val remaining = buffer.remaining()
-                    if (remaining > 0) {
-                        val temp = ByteArray(remaining)
-                        buffer.get(temp)
-                        output.write(temp)
-                    }
-                    // Write from start to position
-                    buffer.position(0)
-                    buffer.limit(currentPosition)
-                    val temp = ByteArray(currentPosition)
-                    buffer.get(temp)
-                    output.write(temp)
-                } else {
-                    // Write entire buffer
-                    buffer.position(0)
-                    val temp = ByteArray(ringBufferSize)
-                    buffer.get(temp)
-                    output.write(temp)
-                }
+                // Write WAV header sized to actual captured data
+                writeWavHeader(output, data.size)
+                output.write(data)
             }
 
             true
@@ -188,11 +174,13 @@ class AudioCapture(private val context: Context) {
      * Clean up resources
      */
     fun cleanup() {
-            try {
+        try {
             audioRecord?.release()
             audioRecord = null
             ringBuffer = null
-            } catch (e: Exception) {
+            ringBufferPosition = 0
+            bytesBuffered = 0
+        } catch (e: Exception) {
             Log.e(TAG, "Error during cleanup: ${e.message}", e)
         }
     }
@@ -201,8 +189,12 @@ class AudioCapture(private val context: Context) {
      * Clear ring buffer
      */
     fun clearRingBuffer() {
-        ringBuffer?.clear()
+        ringBuffer?.let { buffer ->
+            buffer.clear()
+            buffer.limit(buffer.capacity())
+        }
         ringBufferPosition = 0
+        bytesBuffered = 0
     }
 
     /**
@@ -215,26 +207,71 @@ class AudioCapture(private val context: Context) {
     /**
      * Verify buffer is empty
      */
-    fun verifyBufferEmpty(): Boolean {
-        return ringBuffer?.position() == 0
-    }
+    fun verifyBufferEmpty(): Boolean = bytesBuffered == 0
 
     /**
      * Get ring buffer data
      */
     fun getRingBufferData(): ByteArray {
         val buffer = ringBuffer ?: return ByteArray(0)
-        val result = ByteArray(ringBufferSize)
-        buffer.position(0)
-        buffer.get(result)
+        if (bytesBuffered == 0) {
+            return ByteArray(0)
+        }
+
+        val duplicate = buffer.duplicate().order(ByteOrder.LITTLE_ENDIAN)
+        val result = ByteArray(bytesBuffered)
+
+        if (bytesBuffered < ringBufferSize) {
+            duplicate.clear()
+            duplicate.limit(bytesBuffered)
+            duplicate.get(result)
+        } else {
+            val tailBytes = ringBufferSize - ringBufferPosition
+            if (tailBytes > 0) {
+                duplicate.clear()
+                duplicate.position(ringBufferPosition)
+                duplicate.limit(ringBufferPosition + tailBytes)
+                duplicate.get(result, 0, tailBytes)
+            }
+            if (ringBufferPosition > 0) {
+                duplicate.clear()
+                duplicate.limit(ringBufferPosition)
+                duplicate.get(result, tailBytes, ringBufferPosition)
+            }
+        }
+
         return result
     }
 
     private fun updateRingBuffer(buffer: ByteArray, size: Int) {
         val ring = ringBuffer ?: return
+        if (ringBufferSize == 0) {
+            return
+        }
+
+        if (size >= ringBufferSize) {
+            val offset = size - ringBufferSize
+            ring.clear()
+            ring.put(buffer, offset, ringBufferSize)
+            ringBufferPosition = 0
+            bytesBuffered = ringBufferSize
+            return
+        }
+
+        ring.limit(ring.capacity())
         ring.position(ringBufferPosition)
-        ring.put(buffer, 0, size)
+
+        val remaining = ring.remaining()
+        if (size <= remaining) {
+            ring.put(buffer, 0, size)
+        } else {
+            ring.put(buffer, 0, remaining)
+            ring.position(0)
+            ring.put(buffer, remaining, size - remaining)
+        }
+
         ringBufferPosition = (ringBufferPosition + size) % ringBufferSize
+        bytesBuffered = minOf(ringBufferSize, bytesBuffered + size)
     }
 
     private fun calculateEnergyLevel(samples: ShortArray): Float {

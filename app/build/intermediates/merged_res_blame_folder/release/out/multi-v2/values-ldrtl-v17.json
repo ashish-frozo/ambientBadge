@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.frozo.ambientscribe.app-mergeReleaseResources-38:/values-ldrtl-v17/values-ldrtl-v17.xml",
+            "outputFile": "com.frozo.ambientscribe.app-mergeReleaseResources-44:/values-ldrtl-v17/values-ldrtl-v17.xml",
             "map": [
                 {
-                    "source": "/Users/ashishdhiman/.gradle/caches/8.14/transforms/7e5334aaa82f4d7db074fc3d8573ee0e/transformed/material-1.11.0/res/values-ldrtl-v17/values-ldrtl-v17.xml",
+                    "source": "/Users/ashishdhiman/.gradle/caches/8.14/transforms/f14ff53cee8c7914525c333fddf1776b/transformed/material-1.11.0/res/values-ldrtl-v17/values-ldrtl-v17.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",

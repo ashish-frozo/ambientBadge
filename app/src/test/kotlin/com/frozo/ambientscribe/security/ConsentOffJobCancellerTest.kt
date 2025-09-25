@@ -35,7 +35,7 @@ class ConsentOffJobCancellerTest {
         File(context.filesDir, "audit").deleteRecursively()
         File(context.filesDir, "telemetry").deleteRecursively()
 
-        consentOffJobCanceller = ConsentOffJobCanceller(context, mockAuditLogger)
+        consentOffJobCanceller = ConsentOffJobCanceller(context)
     }
 
     @Test
@@ -49,10 +49,9 @@ class ConsentOffJobCancellerTest {
         // Then
         assertTrue(result.isSuccess)
         val cancelResult = result.getOrThrow()
-        assertTrue(cancelResult.success)
         assertEquals(encounterId, cancelResult.encounterId)
-        assertTrue(cancelResult.jobsCancelled >= 0)
-        assertTrue(cancelResult.payloadsWiped >= 0)
+        assertTrue(cancelResult.cancelledJobs >= 0)
+        assertTrue(cancelResult.wipedFiles >= 0)
         assertNotNull(cancelResult.timestamp)
 
         // Verify audit logging

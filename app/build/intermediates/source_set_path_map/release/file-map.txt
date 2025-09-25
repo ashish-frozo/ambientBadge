@@ -1,43 +1,49 @@
-com.frozo.ambientscribe.app-fragment-1.3.6-0 /Users/ashishdhiman/.gradle/caches/8.14/transforms/0084e74289dbc2456105c61855cf2c22/transformed/fragment-1.3.6/res
-com.frozo.ambientscribe.app-activity-1.8.0-1 /Users/ashishdhiman/.gradle/caches/8.14/transforms/0375658a5c00e0b0946ee08d9856b13a/transformed/activity-1.8.0/res
-com.frozo.ambientscribe.app-emoji2-1.2.0-2 /Users/ashishdhiman/.gradle/caches/8.14/transforms/1d20741d89ee19ecfabb55627e4b7c2b/transformed/emoji2-1.2.0/res
-com.frozo.ambientscribe.app-lifecycle-viewmodel-savedstate-2.7.0-3 /Users/ashishdhiman/.gradle/caches/8.14/transforms/1fb5ee091a0647f14ed3a19d9bade838/transformed/lifecycle-viewmodel-savedstate-2.7.0/res
-com.frozo.ambientscribe.app-databinding-adapters-8.2.2-4 /Users/ashishdhiman/.gradle/caches/8.14/transforms/4a8554cdfd75784038044a5d5c7bec2e/transformed/databinding-adapters-8.2.2/res
-com.frozo.ambientscribe.app-lifecycle-livedata-core-2.7.0-5 /Users/ashishdhiman/.gradle/caches/8.14/transforms/53512db1a2fe37934444fb6cda75820b/transformed/lifecycle-livedata-core-2.7.0/res
-com.frozo.ambientscribe.app-lifecycle-service-2.7.0-6 /Users/ashishdhiman/.gradle/caches/8.14/transforms/570a0ba9550f4370480a0bd03057a1b5/transformed/lifecycle-service-2.7.0/res
-com.frozo.ambientscribe.app-core-1.12.0-7 /Users/ashishdhiman/.gradle/caches/8.14/transforms/57d3af3cb209cd79d524b2faaddc85bb/transformed/core-1.12.0/res
-com.frozo.ambientscribe.app-lifecycle-viewmodel-2.7.0-8 /Users/ashishdhiman/.gradle/caches/8.14/transforms/57fed9168eda1fbcec8267ca31d7bfaa/transformed/lifecycle-viewmodel-2.7.0/res
-com.frozo.ambientscribe.app-annotation-experimental-1.3.0-9 /Users/ashishdhiman/.gradle/caches/8.14/transforms/5eeb72b1999cf4b227fea0e4a6594888/transformed/annotation-experimental-1.3.0/res
-com.frozo.ambientscribe.app-viewpager2-1.0.0-10 /Users/ashishdhiman/.gradle/caches/8.14/transforms/64e4af10509af85bce09eed00164b014/transformed/viewpager2-1.0.0/res
-com.frozo.ambientscribe.app-emoji2-views-helper-1.2.0-11 /Users/ashishdhiman/.gradle/caches/8.14/transforms/6a792f785a770995f5c11f45e68afa3b/transformed/emoji2-views-helper-1.2.0/res
-com.frozo.ambientscribe.app-lifecycle-process-2.7.0-12 /Users/ashishdhiman/.gradle/caches/8.14/transforms/6e4d36b3bd4008c1a14c96a7ee57f0e9/transformed/lifecycle-process-2.7.0/res
-com.frozo.ambientscribe.app-constraintlayout-2.1.4-13 /Users/ashishdhiman/.gradle/caches/8.14/transforms/77750d54adad78c8f5d671f5139af949/transformed/constraintlayout-2.1.4/res
-com.frozo.ambientscribe.app-material-1.11.0-14 /Users/ashishdhiman/.gradle/caches/8.14/transforms/7e5334aaa82f4d7db074fc3d8573ee0e/transformed/material-1.11.0/res
-com.frozo.ambientscribe.app-biometric-1.2.0-alpha05-15 /Users/ashishdhiman/.gradle/caches/8.14/transforms/8385f6f911937f35f8c8a2a08f69af5a/transformed/biometric-1.2.0-alpha05/res
-com.frozo.ambientscribe.app-savedstate-1.2.1-16 /Users/ashishdhiman/.gradle/caches/8.14/transforms/8559cf4e32c7303dafeaf5d680313cc2/transformed/savedstate-1.2.1/res
-com.frozo.ambientscribe.app-appcompat-1.6.1-17 /Users/ashishdhiman/.gradle/caches/8.14/transforms/8ad55764aa658a49de8e63a97cb6a9e6/transformed/appcompat-1.6.1/res
-com.frozo.ambientscribe.app-lifecycle-livedata-core-ktx-2.7.0-18 /Users/ashishdhiman/.gradle/caches/8.14/transforms/8b27a44c5bea500d836e246815c0f21e/transformed/lifecycle-livedata-core-ktx-2.7.0/res
-com.frozo.ambientscribe.app-startup-runtime-1.1.1-19 /Users/ashishdhiman/.gradle/caches/8.14/transforms/8f22514c1d48183212601b4f4a5ad10a/transformed/startup-runtime-1.1.1/res
-com.frozo.ambientscribe.app-appcompat-resources-1.6.1-20 /Users/ashishdhiman/.gradle/caches/8.14/transforms/8ff88aebc0101f6614e3dddf53ea6112/transformed/appcompat-resources-1.6.1/res
-com.frozo.ambientscribe.app-lifecycle-viewmodel-ktx-2.7.0-21 /Users/ashishdhiman/.gradle/caches/8.14/transforms/9550828683a4bf7283ea87a8232ef0ff/transformed/lifecycle-viewmodel-ktx-2.7.0/res
-com.frozo.ambientscribe.app-lifecycle-livedata-2.7.0-22 /Users/ashishdhiman/.gradle/caches/8.14/transforms/980a2523658df02791cdf0401b1e97ab/transformed/lifecycle-livedata-2.7.0/res
-com.frozo.ambientscribe.app-lifecycle-livedata-ktx-2.7.0-23 /Users/ashishdhiman/.gradle/caches/8.14/transforms/983152dcc6f07aeb01d56e9f66f7f4b8/transformed/lifecycle-livedata-ktx-2.7.0/res
-com.frozo.ambientscribe.app-coordinatorlayout-1.1.0-24 /Users/ashishdhiman/.gradle/caches/8.14/transforms/a533e759f44ec8dd132a9f46d9f962bc/transformed/coordinatorlayout-1.1.0/res
-com.frozo.ambientscribe.app-core-runtime-2.2.0-25 /Users/ashishdhiman/.gradle/caches/8.14/transforms/abe3c6f8c0360823b219416f43822932/transformed/core-runtime-2.2.0/res
-com.frozo.ambientscribe.app-recyclerview-1.1.0-26 /Users/ashishdhiman/.gradle/caches/8.14/transforms/b566f8eac46e54c8d770354c02a85692/transformed/recyclerview-1.1.0/res
-com.frozo.ambientscribe.app-security-crypto-1.1.0-alpha06-27 /Users/ashishdhiman/.gradle/caches/8.14/transforms/b66e114d4baca25bc393ee51cbbd2a23/transformed/security-crypto-1.1.0-alpha06/res
-com.frozo.ambientscribe.app-lifecycle-runtime-2.7.0-28 /Users/ashishdhiman/.gradle/caches/8.14/transforms/be5ef22bdf9c2d3ca8429afeab634d24/transformed/lifecycle-runtime-2.7.0/res
-com.frozo.ambientscribe.app-drawerlayout-1.1.1-29 /Users/ashishdhiman/.gradle/caches/8.14/transforms/cb3267e6910f6c175448692e420570c5/transformed/drawerlayout-1.1.1/res
-com.frozo.ambientscribe.app-core-ktx-1.12.0-30 /Users/ashishdhiman/.gradle/caches/8.14/transforms/d99af6b86bfd92aa2b9fcf55fde32573/transformed/core-ktx-1.12.0/res
-com.frozo.ambientscribe.app-lifecycle-runtime-ktx-2.7.0-31 /Users/ashishdhiman/.gradle/caches/8.14/transforms/db625adc85a7b680b595b693ff28d2b5/transformed/lifecycle-runtime-ktx-2.7.0/res
-com.frozo.ambientscribe.app-databinding-runtime-8.2.2-32 /Users/ashishdhiman/.gradle/caches/8.14/transforms/dfbdd4c3aa47f64cf1c3fb2aa6da8e4b/transformed/databinding-runtime-8.2.2/res
-com.frozo.ambientscribe.app-profileinstaller-1.3.0-33 /Users/ashishdhiman/.gradle/caches/8.14/transforms/e41de98cf33bd536cf7d026201ee645e/transformed/profileinstaller-1.3.0/res
-com.frozo.ambientscribe.app-transition-1.2.0-34 /Users/ashishdhiman/.gradle/caches/8.14/transforms/ea520e8370ddfe9cb31ed815e754a714/transformed/transition-1.2.0/res
-com.frozo.ambientscribe.app-cardview-1.0.0-35 /Users/ashishdhiman/.gradle/caches/8.14/transforms/ede954866d8c4e14e0de2ffc8e5baa8a/transformed/cardview-1.0.0/res
-com.frozo.ambientscribe.app-pngs-36 /Users/ashishdhiman/Fzozo - Ambient_badge/app/build/generated/res/pngs/release
-com.frozo.ambientscribe.app-resValues-37 /Users/ashishdhiman/Fzozo - Ambient_badge/app/build/generated/res/resValues/release
-com.frozo.ambientscribe.app-packageReleaseResources-38 /Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/incremental/release/packageReleaseResources/merged.dir
-com.frozo.ambientscribe.app-packageReleaseResources-39 /Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/incremental/release/packageReleaseResources/stripped.dir
-com.frozo.ambientscribe.app-merged_res-40 /Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/merged_res/release
-com.frozo.ambientscribe.app-main-41 /Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/res
-com.frozo.ambientscribe.app-release-42 /Users/ashishdhiman/Fzozo - Ambient_badge/app/src/release/res
+com.frozo.ambientscribe.app-lifecycle-livedata-ktx-2.7.0-0 /Users/ashishdhiman/.gradle/caches/8.14/transforms/07343c65332776308fd1a8142fee4ac8/transformed/lifecycle-livedata-ktx-2.7.0/res
+com.frozo.ambientscribe.app-cardview-1.0.0-1 /Users/ashishdhiman/.gradle/caches/8.14/transforms/0c27cb6345dca698793b5a7b8967e976/transformed/cardview-1.0.0/res
+com.frozo.ambientscribe.app-emoji2-views-helper-1.2.0-2 /Users/ashishdhiman/.gradle/caches/8.14/transforms/1179d411b3d331a6dc6debc207c190ac/transformed/emoji2-views-helper-1.2.0/res
+com.frozo.ambientscribe.app-emoji2-1.2.0-3 /Users/ashishdhiman/.gradle/caches/8.14/transforms/1953c8bd4f4bb74e6b278aa1ebc34807/transformed/emoji2-1.2.0/res
+com.frozo.ambientscribe.app-lifecycle-runtime-ktx-2.7.0-4 /Users/ashishdhiman/.gradle/caches/8.14/transforms/2495119491a924619bec1f06d096bb60/transformed/lifecycle-runtime-ktx-2.7.0/res
+com.frozo.ambientscribe.app-recyclerview-1.1.0-5 /Users/ashishdhiman/.gradle/caches/8.14/transforms/2c765cba2bf27c2aebc10abe90d49b88/transformed/recyclerview-1.1.0/res
+com.frozo.ambientscribe.app-appcompat-resources-1.6.1-6 /Users/ashishdhiman/.gradle/caches/8.14/transforms/2dc8d5c0e23100d310ae7754868960e2/transformed/appcompat-resources-1.6.1/res
+com.frozo.ambientscribe.app-profileinstaller-1.3.0-7 /Users/ashishdhiman/.gradle/caches/8.14/transforms/3505b852f551e5f283bb9f5c96e76068/transformed/profileinstaller-1.3.0/res
+com.frozo.ambientscribe.app-lifecycle-process-2.7.0-8 /Users/ashishdhiman/.gradle/caches/8.14/transforms/370051043391091b27ccc52abe2ad581/transformed/lifecycle-process-2.7.0/res
+com.frozo.ambientscribe.app-biometric-1.2.0-alpha05-9 /Users/ashishdhiman/.gradle/caches/8.14/transforms/3715d3c419afae3dbfa52ee245ee828d/transformed/biometric-1.2.0-alpha05/res
+com.frozo.ambientscribe.app-appcompat-1.6.1-10 /Users/ashishdhiman/.gradle/caches/8.14/transforms/3eafdbb7059c19ae898a793745b69e4d/transformed/appcompat-1.6.1/res
+com.frozo.ambientscribe.app-lifecycle-service-2.7.0-11 /Users/ashishdhiman/.gradle/caches/8.14/transforms/420d56e93f83feb3bfd01883c1844c05/transformed/lifecycle-service-2.7.0/res
+com.frozo.ambientscribe.app-transition-1.2.0-12 /Users/ashishdhiman/.gradle/caches/8.14/transforms/53bda0b2a8c30a8f85954a63da055db5/transformed/transition-1.2.0/res
+com.frozo.ambientscribe.app-core-ktx-1.12.0-13 /Users/ashishdhiman/.gradle/caches/8.14/transforms/59228899f0946c439ed1de2628795a3d/transformed/core-ktx-1.12.0/res
+com.frozo.ambientscribe.app-lifecycle-livedata-2.7.0-14 /Users/ashishdhiman/.gradle/caches/8.14/transforms/675f10f8fb8a391f4cac69709b5b163b/transformed/lifecycle-livedata-2.7.0/res
+com.frozo.ambientscribe.app-viewpager2-1.0.0-15 /Users/ashishdhiman/.gradle/caches/8.14/transforms/676f472f2febb1d18aec572e2a7d392a/transformed/viewpager2-1.0.0/res
+com.frozo.ambientscribe.app-sqlite-framework-2.3.0-16 /Users/ashishdhiman/.gradle/caches/8.14/transforms/67977ca4dc853122b4fab788d7197cd2/transformed/sqlite-framework-2.3.0/res
+com.frozo.ambientscribe.app-databinding-adapters-8.2.2-17 /Users/ashishdhiman/.gradle/caches/8.14/transforms/68114067fec8aa652336063714fab85d/transformed/databinding-adapters-8.2.2/res
+com.frozo.ambientscribe.app-work-runtime-ktx-2.9.0-18 /Users/ashishdhiman/.gradle/caches/8.14/transforms/7e2cff1dac414000eaa6071ed31d0359/transformed/work-runtime-ktx-2.9.0/res
+com.frozo.ambientscribe.app-annotation-experimental-1.3.0-19 /Users/ashishdhiman/.gradle/caches/8.14/transforms/7e4dd784653e9d35d825f4686756651a/transformed/annotation-experimental-1.3.0/res
+com.frozo.ambientscribe.app-core-runtime-2.2.0-20 /Users/ashishdhiman/.gradle/caches/8.14/transforms/89ae01cdb5dad817e9c90160b361c855/transformed/core-runtime-2.2.0/res
+com.frozo.ambientscribe.app-security-crypto-1.1.0-alpha06-21 /Users/ashishdhiman/.gradle/caches/8.14/transforms/8bc810f3f8d9517fec2e231dbbcfc47a/transformed/security-crypto-1.1.0-alpha06/res
+com.frozo.ambientscribe.app-activity-1.8.0-22 /Users/ashishdhiman/.gradle/caches/8.14/transforms/8dec5bc8265233b0f25a354ac4f6b67c/transformed/activity-1.8.0/res
+com.frozo.ambientscribe.app-lifecycle-runtime-2.7.0-23 /Users/ashishdhiman/.gradle/caches/8.14/transforms/a2c38f22a963c1d687f75a263c3e4715/transformed/lifecycle-runtime-2.7.0/res
+com.frozo.ambientscribe.app-coordinatorlayout-1.1.0-24 /Users/ashishdhiman/.gradle/caches/8.14/transforms/b46971ce8dbcf10fd763793f8bca626d/transformed/coordinatorlayout-1.1.0/res
+com.frozo.ambientscribe.app-lifecycle-livedata-core-ktx-2.7.0-25 /Users/ashishdhiman/.gradle/caches/8.14/transforms/b729a8027b39ef8da2376d4437b4c15c/transformed/lifecycle-livedata-core-ktx-2.7.0/res
+com.frozo.ambientscribe.app-lifecycle-viewmodel-savedstate-2.7.0-26 /Users/ashishdhiman/.gradle/caches/8.14/transforms/cb092df7132e126d52daf2493e69d72b/transformed/lifecycle-viewmodel-savedstate-2.7.0/res
+com.frozo.ambientscribe.app-sqlite-2.3.0-27 /Users/ashishdhiman/.gradle/caches/8.14/transforms/cc5bdfa1453215e7f8707a9294d54760/transformed/sqlite-2.3.0/res
+com.frozo.ambientscribe.app-work-runtime-2.9.0-28 /Users/ashishdhiman/.gradle/caches/8.14/transforms/ccaf38e38cd8200aa7bacf77cad502c1/transformed/work-runtime-2.9.0/res
+com.frozo.ambientscribe.app-constraintlayout-2.1.4-29 /Users/ashishdhiman/.gradle/caches/8.14/transforms/d9b89cdfc5888ccb7747bbf927777c35/transformed/constraintlayout-2.1.4/res
+com.frozo.ambientscribe.app-lifecycle-viewmodel-ktx-2.7.0-30 /Users/ashishdhiman/.gradle/caches/8.14/transforms/dbb2a2c72dca07a4af395e469551780c/transformed/lifecycle-viewmodel-ktx-2.7.0/res
+com.frozo.ambientscribe.app-room-runtime-2.5.0-31 /Users/ashishdhiman/.gradle/caches/8.14/transforms/dc94d420ed520eba8c4e28a6d022581b/transformed/room-runtime-2.5.0/res
+com.frozo.ambientscribe.app-databinding-runtime-8.2.2-32 /Users/ashishdhiman/.gradle/caches/8.14/transforms/dddb22256758f75b912f193c014ae4db/transformed/databinding-runtime-8.2.2/res
+com.frozo.ambientscribe.app-lifecycle-livedata-core-2.7.0-33 /Users/ashishdhiman/.gradle/caches/8.14/transforms/e79b21f2c2d679eaaeb8a18ee057af6c/transformed/lifecycle-livedata-core-2.7.0/res
+com.frozo.ambientscribe.app-fragment-1.3.6-34 /Users/ashishdhiman/.gradle/caches/8.14/transforms/e7f7df68fce14326be8d9c24e8bf05ba/transformed/fragment-1.3.6/res
+com.frozo.ambientscribe.app-lifecycle-viewmodel-2.7.0-35 /Users/ashishdhiman/.gradle/caches/8.14/transforms/edf87417bb8fbc8e6ea7467177450548/transformed/lifecycle-viewmodel-2.7.0/res
+com.frozo.ambientscribe.app-material-1.11.0-36 /Users/ashishdhiman/.gradle/caches/8.14/transforms/f14ff53cee8c7914525c333fddf1776b/transformed/material-1.11.0/res
+com.frozo.ambientscribe.app-core-1.12.0-37 /Users/ashishdhiman/.gradle/caches/8.14/transforms/f4a6571a035c3924b4e61975f0ba2dc4/transformed/core-1.12.0/res
+com.frozo.ambientscribe.app-drawerlayout-1.1.1-38 /Users/ashishdhiman/.gradle/caches/8.14/transforms/f6e3ebde1edc02e5f4cde94251a8d0db/transformed/drawerlayout-1.1.1/res
+com.frozo.ambientscribe.app-startup-runtime-1.1.1-39 /Users/ashishdhiman/.gradle/caches/8.14/transforms/f7b25a1363c3b8ae39a0af376bc3136f/transformed/startup-runtime-1.1.1/res
+com.frozo.ambientscribe.app-savedstate-1.2.1-40 /Users/ashishdhiman/.gradle/caches/8.14/transforms/fcc88be04831e17b68f8f6cb51bd5b9f/transformed/savedstate-1.2.1/res
+com.frozo.ambientscribe.app-room-ktx-2.5.0-41 /Users/ashishdhiman/.gradle/caches/8.14/transforms/fd0ef2f7c95f75a8dba8b45597883e05/transformed/room-ktx-2.5.0/res
+com.frozo.ambientscribe.app-pngs-42 /Users/ashishdhiman/Fzozo - Ambient_badge/app/build/generated/res/pngs/release
+com.frozo.ambientscribe.app-resValues-43 /Users/ashishdhiman/Fzozo - Ambient_badge/app/build/generated/res/resValues/release
+com.frozo.ambientscribe.app-packageReleaseResources-44 /Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/incremental/release/packageReleaseResources/merged.dir
+com.frozo.ambientscribe.app-packageReleaseResources-45 /Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/incremental/release/packageReleaseResources/stripped.dir
+com.frozo.ambientscribe.app-merged_res-46 /Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/merged_res/release
+com.frozo.ambientscribe.app-main-47 /Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/res
+com.frozo.ambientscribe.app-release-48 /Users/ashishdhiman/Fzozo - Ambient_badge/app/src/release/res

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import java.time.Instant
-import kotlinx.serialization.json.Json
 
 /**
  * Comprehensive Test Suite for PT-8 Telemetry and Metrics
