@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.BatteryManager
+import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings
 import android.util.Log
@@ -83,7 +84,7 @@ class BatteryOptimizationManager(
             
             if (isMonitoring.get()) {
                 Log.w(TAG, "Battery monitoring already started")
-                return Result.success(Unit)
+                return@withContext Result.success(Unit)
             }
 
             isMonitoring.set(true)
@@ -128,7 +129,7 @@ class BatteryOptimizationManager(
     suspend fun getCurrentBatteryConsumption(): Result<Float> = withContext(Dispatchers.IO) {
         try {
             if (batteryHistory.size < 2) {
-                return Result.failure(IllegalStateException("Insufficient battery history"))
+                return@withContext Result.failure(IllegalStateException("Insufficient battery history"))
             }
 
             val currentSample = getCurrentBatterySample()
@@ -159,7 +160,7 @@ class BatteryOptimizationManager(
             Log.d(TAG, "Starting battery optimization")
             
             val capabilities = deviceTierDetector.loadDeviceCapabilities()
-                ?: return Result.failure(IllegalStateException("No device capabilities found"))
+                ?: return@withContext Result.failure(IllegalStateException("No device capabilities found"))
 
             val currentConsumption = getCurrentBatteryConsumption().getOrNull() ?: 0f
             val targetConsumption = capabilities.recommendedSettings.batteryConsumptionTargetPercentPerHour.toFloat()
@@ -228,11 +229,11 @@ class BatteryOptimizationManager(
             val status = checkBatteryExemptionStatus()
             if (status.isExempted) {
                 Log.d(TAG, "App is already exempted from battery optimization")
-                return Result.success(Unit)
+                return@withContext Result.success(Unit)
             }
 
             if (!status.canRequestExemption) {
-                return Result.failure(IllegalStateException("Cannot request battery exemption"))
+                return@withContext Result.failure(IllegalStateException("Cannot request battery exemption"))
             }
 
             // Open battery optimization settings
@@ -260,7 +261,7 @@ class BatteryOptimizationManager(
             val status = checkBatteryExemptionStatus()
             val currentConsumption = getCurrentBatteryConsumption().getOrNull() ?: 0f
             val capabilities = deviceTierDetector.loadDeviceCapabilities()
-                ?: return Result.failure(IllegalStateException("No device capabilities found"))
+                ?: return@withContext Result.failure(IllegalStateException("No device capabilities found"))
 
             val targetConsumption = capabilities.recommendedSettings.batteryConsumptionTargetPercentPerHour.toFloat()
             val isExceedingTarget = currentConsumption > targetConsumption
@@ -287,10 +288,40 @@ class BatteryOptimizationManager(
      */
     private fun getCurrentBatterySample(): BatterySample {
         val batteryLevel = getCurrentBatteryLevel()
-        val temperature = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_TEMPERATURE) / 10f
-        val voltage = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_VOLTAGE)
+        val temperature = try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                // Use reflection to access temperature property if available
+                val temperatureField = BatteryManager::class.java.getDeclaredField("BATTERY_PROPERTY_TEMPERATURE")
+                val temperatureProperty = temperatureField.getInt(null)
+                batteryManager.getIntProperty(temperatureProperty) / 10f
+            } else {
+                25f // Default temperature for older API levels
+            }
+        } catch (e: Exception) {
+            25f // Default temperature
+        }
+        val voltage = try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                // Use reflection to access voltage property if available
+                val voltageField = BatteryManager::class.java.getDeclaredField("BATTERY_PROPERTY_VOLTAGE")
+                val voltageProperty = voltageField.getInt(null)
+                batteryManager.getIntProperty(voltageProperty)
+            } else {
+                3700 // Default voltage for older API levels
+            }
+        } catch (e: Exception) {
+            3700 // Default voltage
+        }
         val isCharging = batteryManager.isCharging
-        val chargeCounter = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER).toLong()
+        val chargeCounter = try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER).toLong()
+            } else {
+                0L // Default charge counter for older API levels
+            }
+        } catch (e: Exception) {
+            0L // Default charge counter
+        }
         
         // Calculate consumption rate from history
         val consumption = if (batteryHistory.isNotEmpty()) {

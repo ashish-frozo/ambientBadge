@@ -6,6 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.File
+import kotlin.random.Random
 
 /**
  * FTL Matrix Tester - ST-6.16
@@ -406,7 +407,7 @@ class FTLMatrixTester(
      */
     private suspend fun simulateFirstTokenLatency(): Long {
         kotlinx.coroutines.delay(500) // Simulate processing time
-        return (500..1500).random().toLong()
+        return Random.nextLong(500, 1500)
     }
 
     /**
@@ -414,42 +415,42 @@ class FTLMatrixTester(
      */
     private suspend fun simulateDraftReadyLatency(): Long {
         kotlinx.coroutines.delay(2000) // Simulate processing time
-        return (5000..15000).random().toLong()
+        return Random.nextLong(5000, 15000)
     }
 
     /**
      * Simulate memory usage
      */
     private suspend fun simulateMemoryUsage(): Long {
-        return (200..800).random().toLong()
+        return Random.nextLong(200, 800)
     }
 
     /**
      * Simulate battery consumption
      */
     private suspend fun simulateBatteryConsumption(): Float {
-        return (3f..10f).random()
+        return Random.nextFloat() * 7f + 3f
     }
 
     /**
      * Simulate idle battery drain
      */
     private suspend fun simulateIdleBatteryDrain(): Float {
-        return (1f..4f).random()
+        return Random.nextFloat() * 3f + 1f
     }
 
     /**
      * Simulate thermal throttling
      */
     private suspend fun simulateThermalThrottling(): Float {
-        return (35f..55f).random()
+        return Random.nextFloat() * 20f + 35f
     }
 
     /**
      * Simulate heat dissipation
      */
     private suspend fun simulateHeatDissipation(): Float {
-        return (40f..60f).random()
+        return Random.nextFloat() * 20f + 40f
     }
 
     /**

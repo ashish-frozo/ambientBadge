@@ -23,7 +23,7 @@ class DeviceCompatibilityChecker(private val context: Context) {
         private const val MIN_STORAGE_GB = 16
         private const val MIN_CPU_CORES = 4
         private const val MIN_CPU_FREQ_MHZ = 1500
-        private const val REQUIRED_FEATURES = arrayOf(
+        private val REQUIRED_FEATURES = listOf(
             PackageManager.FEATURE_MICROPHONE,
             PackageManager.FEATURE_AUDIO_OUTPUT,
             PackageManager.FEATURE_WIFI,

@@ -121,14 +121,14 @@ class ConsentOffJobCanceller(private val context: Context) {
 
             // Get all running and enqueued work
             val workQuery = WorkQuery.Builder
-                .fromStates(WorkInfo.State.RUNNING, WorkInfo.State.ENQUEUED)
+                .fromStates(listOf(WorkInfo.State.RUNNING, WorkInfo.State.ENQUEUED))
                 .build()
 
             val workInfos = workManager.getWorkInfos(workQuery).get()
             
             for (workInfo in workInfos) {
                 val tags = workInfo.tags
-                val inputData = workInfo.inputData
+                val inputData = workInfo.outputData
                 
                 // Check if this work is related to the encounter
                 val isEncounterRelated = tags.any { it.contains(encounterId) } ||
@@ -415,7 +415,7 @@ class ConsentOffJobCanceller(private val context: Context) {
 
             // Get WorkManager job counts
             val workQuery = WorkQuery.Builder
-                .fromStates(WorkInfo.State.RUNNING, WorkInfo.State.ENQUEUED)
+                .fromStates(listOf(WorkInfo.State.RUNNING, WorkInfo.State.ENQUEUED))
                 .build()
 
             val workInfos = workManager.getWorkInfos(workQuery).get()

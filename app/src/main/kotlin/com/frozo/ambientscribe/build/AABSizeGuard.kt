@@ -73,7 +73,7 @@ class AABSizeGuard(
             
             val aabFile = File(aabPath)
             if (!aabFile.exists()) {
-                return Result.failure(IllegalArgumentException("AAB file not found: $aabPath"))
+                return@withContext Result.failure(IllegalArgumentException("AAB file not found: $aabPath"))
             }
             
             val totalSizeMB = aabFile.length() / (1024 * 1024)
@@ -252,7 +252,7 @@ class AABSizeGuard(
             
             val analysisResult = analyzeAABSize(aabPath)
             if (analysisResult.isFailure) {
-                return Result.failure(analysisResult.exceptionOrNull()!!)
+                return@withContext Result.failure(analysisResult.exceptionOrNull()!!)
             }
             
             val analysis = analysisResult.getOrThrow()

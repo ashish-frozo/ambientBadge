@@ -324,7 +324,7 @@ class LocalizationTestManager(private val context: Context) {
             }
         }
         
-        return TestResult(violations, recommendations)
+        return TestResult(violations = violations, recommendations = recommendations)
     }
 
     /**
@@ -358,7 +358,7 @@ class LocalizationTestManager(private val context: Context) {
             }
         }
         
-        return TestResult(violations, recommendations)
+        return TestResult(violations = violations, recommendations = recommendations)
     }
 
     /**
@@ -386,7 +386,7 @@ class LocalizationTestManager(private val context: Context) {
             recommendations.add("Add accessibility label for $element")
         }
         
-        return TestResult(violations, recommendations)
+        return TestResult(violations = violations, recommendations = recommendations)
     }
 
     /**
@@ -414,7 +414,7 @@ class LocalizationTestManager(private val context: Context) {
             recommendations.add("Fix keyboard navigation for $element")
         }
         
-        return TestResult(violations, recommendations)
+        return TestResult(violations = violations, recommendations = recommendations)
     }
 
     /**
@@ -614,7 +614,7 @@ class LocalizationTestManager(private val context: Context) {
             recommendations.add("Increase touch target sizes for large fonts")
         }
         
-        return TestResult(touchTargetViolations, layoutIssues, recommendations)
+        return TestResult(touchTargetViolations = touchTargetViolations, layoutIssues = layoutIssues, recommendations = recommendations)
     }
 
     /**
@@ -635,7 +635,7 @@ class LocalizationTestManager(private val context: Context) {
             recommendations.add("Consider horizontal scrolling for small widths")
         }
         
-        return TestResult(touchTargetViolations, layoutIssues, recommendations)
+        return TestResult(touchTargetViolations = touchTargetViolations, layoutIssues = layoutIssues, recommendations = recommendations)
     }
 
     /**

@@ -412,7 +412,7 @@ class DeviceTierDetector(private val context: Context) {
     suspend fun loadDeviceCapabilities(): DeviceCapabilities? = withContext(Dispatchers.IO) {
         try {
             val capabilitiesFile = File(context.filesDir, "device_capabilities/device_capabilities.json")
-            if (!capabilitiesFile.exists()) return null
+            if (!capabilitiesFile.exists()) return@withContext null
             
             val json = JSONObject(capabilitiesFile.readText())
             

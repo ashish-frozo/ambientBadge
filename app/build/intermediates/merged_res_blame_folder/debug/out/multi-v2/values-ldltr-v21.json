@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.frozo.ambientscribe.app-mergeDebugResources-38:/values-ldltr-v21/values-ldltr-v21.xml",
+            "outputFile": "com.frozo.ambientscribe.app-mergeDebugResources-44:/values-ldltr-v21/values-ldltr-v21.xml",
             "map": [
                 {
-                    "source": "/Users/ashishdhiman/.gradle/caches/8.14/transforms/8ad55764aa658a49de8e63a97cb6a9e6/transformed/appcompat-1.6.1/res/values-ldltr-v21/values-ldltr-v21.xml",
+                    "source": "/Users/ashishdhiman/.gradle/caches/8.14/transforms/3eafdbb7059c19ae898a793745b69e4d/transformed/appcompat-1.6.1/res/values-ldltr-v21/values-ldltr-v21.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

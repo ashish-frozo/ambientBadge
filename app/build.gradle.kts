@@ -1,8 +1,11 @@
+import java.math.BigDecimal
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
     id("com.google.devtools.ksp") version "1.9.22-1.0.17"
+    id("jacoco")
 }
 
 android {
@@ -45,6 +48,10 @@ android {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.11"
+}
+
 dependencies {
     // AndroidX Core
     implementation("androidx.core:core-ktx:1.12.0")
@@ -62,6 +69,12 @@ dependencies {
     // Security
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
     implementation("androidx.biometric:biometric:1.2.0-alpha05")
+    
+    // WorkManager
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+    
+    // OkHttp for TLS Certificate Pinning
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     // PDF Generation
     implementation("com.itextpdf:itext7-core:8.0.2")
@@ -97,4 +110,93 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("org.mockito:mockito-android:5.8.0")
     androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+}
+
+val coverageExclusions = listOf(
+    "**/BuildConfig.*",
+    "**/Manifest*.*",
+    "**/R.class",
+    "**/R$*.class",
+    "**/*_Factory.*",
+    "**/*_MembersInjector.*",
+    "**/*Companion*",
+    "**/*Kt.class"
+)
+
+val coverageClassDirectories = files(
+    fileTree("$buildDir/tmp/kotlin-classes/debug") {
+        exclude(coverageExclusions)
+    },
+    fileTree("$buildDir/intermediates/javac/debug/classes") {
+        exclude(coverageExclusions)
+    }
+)
+
+val coverageSourceDirectories = files("src/main/java", "src/main/kotlin")
+
+val coverageExecutionData = fileTree("$buildDir") {
+    include("**/testDebugUnitTest.exec")
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
+    classDirectories.setFrom(coverageClassDirectories)
+    sourceDirectories.setFrom(coverageSourceDirectories)
+    executionData.setFrom(coverageExecutionData)
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+}
+
+tasks.register<JacocoCoverageVerification>("jacocoCoverageVerification") {
+    dependsOn("testDebugUnitTest")
+    classDirectories.setFrom(coverageClassDirectories)
+    sourceDirectories.setFrom(coverageSourceDirectories)
+    executionData.setFrom(coverageExecutionData)
+
+    violationRules {
+        rule {
+            element = "PACKAGE"
+            includes = listOf("com.frozo.ambientscribe.audio")
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = BigDecimal("0.85")
+            }
+        }
+        rule {
+            element = "PACKAGE"
+            includes = listOf("com.frozo.ambientscribe.pdf")
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = BigDecimal("0.90")
+            }
+        }
+        rule {
+            element = "PACKAGE"
+            includes = listOf("com.frozo.ambientscribe.security")
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = BigDecimal("0.95")
+            }
+        }
+        rule {
+            element = "BUNDLE"
+            limit {
+                counter = "LINE"
+                value = "COVEREDRATIO"
+                minimum = BigDecimal("0.85")
+            }
+        }
+    }
+}
+
+tasks.named("check") {
+    dependsOn("jacocoCoverageVerification")
+    dependsOn(":verifyLicenseAllowlist")
+    dependsOn(":verifyNoticeUpToDate")
 }

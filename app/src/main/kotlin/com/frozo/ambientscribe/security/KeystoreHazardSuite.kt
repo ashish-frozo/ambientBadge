@@ -266,8 +266,9 @@ class KeystoreHazardSuite(private val context: Context) {
         val timestamp = dateFormat.format(Date())
         
         try {
-            val activeKeyAlias = keystoreKeyManager.getActiveKeyAlias()
-            val key = keystoreKeyManager.getKey(activeKeyAlias)
+            val activeKeys = keystoreKeyManager.getActiveKeys()
+            val activeKeyAlias = activeKeys.firstOrNull()?.keyAlias
+            val key = activeKeyAlias?.let { keystoreKeyManager.getKeyMetadata(it) }
             
             if (key == null) {
                 return@withContext HazardDetectionResult(
@@ -520,19 +521,19 @@ class KeystoreHazardSuite(private val context: Context) {
 
             // Test OS upgrade scenario
             val osUpgradeTest = testOSUpgradeScenario()
-            testResults.add("OS Upgrade Test: ${if (osUpgradeTest) 'PASS' else 'FAIL'}")
+            testResults.add("OS Upgrade Test: ${if (osUpgradeTest) "PASS" else "FAIL"}")
 
             // Test biometric reset scenario
             val biometricResetTest = testBiometricResetScenario()
-            testResults.add("Biometric Reset Test: ${if (biometricResetTest) 'PASS' else 'FAIL'}")
+            testResults.add("Biometric Reset Test: ${if (biometricResetTest) "PASS" else "FAIL"}")
 
             // Test clear credentials scenario
             val clearCredentialsTest = testClearCredentialsScenario()
-            testResults.add("Clear Credentials Test: ${if (clearCredentialsTest) 'PASS' else 'FAIL'}")
+            testResults.add("Clear Credentials Test: ${if (clearCredentialsTest) "PASS" else "FAIL"}")
 
             // Test key invalidation scenario
             val keyInvalidationTest = testKeyInvalidationScenario()
-            testResults.add("Key Invalidation Test: ${if (keyInvalidationTest) 'PASS' else 'FAIL'}")
+            testResults.add("Key Invalidation Test: ${if (keyInvalidationTest) "PASS" else "FAIL"}")
 
             val allTestsPassed = osUpgradeTest && biometricResetTest && clearCredentialsTest && keyInvalidationTest
 
@@ -555,7 +556,7 @@ class KeystoreHazardSuite(private val context: Context) {
                 )
             )
 
-            Timber.i("Hazard scenario testing completed: ${if (allTestsPassed) 'PASS' else 'FAIL'}")
+            Timber.i("Hazard scenario testing completed: ${if (allTestsPassed) "PASS" else "FAIL"}")
             Result.success(testResult)
 
         } catch (e: Exception) {
@@ -627,7 +628,7 @@ class KeystoreHazardSuite(private val context: Context) {
     }
 
     private fun getCurrentKeyCount(): Int {
-        return keystoreKeyManager.getAllValidKeyAliases().size
+        return keystoreKeyManager.getActiveKeys().size
     }
 
     private fun getStoredKeyCount(): Int {

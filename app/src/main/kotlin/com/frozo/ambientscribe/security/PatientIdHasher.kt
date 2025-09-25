@@ -61,11 +61,11 @@ class PatientIdHasher(private val context: Context) {
             val saltVersion = getCurrentSaltVersion()
             
             // Create hash input: salt + clinicId + normalizedId
-            val hashInput = salt + clinicId + normalizedId
+            val hashInput = salt + clinicId.toByteArray() + normalizedId.toByteArray()
             
             // Generate SHA256 hash
             val digest = MessageDigest.getInstance(HASH_ALGORITHM)
-            val hashBytes = digest.digest(hashInput.toByteArray())
+            val hashBytes = digest.digest(hashInput)
             
             // Convert to hex string
             val hashString = hashBytes.joinToString("") { "%02x".format(it) }

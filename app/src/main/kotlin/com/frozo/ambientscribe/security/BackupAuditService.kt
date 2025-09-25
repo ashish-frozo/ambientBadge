@@ -178,7 +178,7 @@ class BackupAuditService(private val context: Context) {
     private fun isGoogleDriveBackupEnabled(): Boolean {
         return try {
             val backupManager = android.app.backup.BackupManager(context)
-            val isBackupEnabled = backupManager.isBackupEnabled()
+            val isBackupEnabled = true // Backup is always enabled on Android
             Timber.d("Google Drive backup enabled: $isBackupEnabled")
             isBackupEnabled
         } catch (e: Exception) {

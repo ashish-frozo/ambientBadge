@@ -12,6 +12,7 @@ import timber.log.Timber
 import java.security.KeyStore
 import java.util.Date
 import javax.crypto.KeyGenerator
+import kotlin.random.Random
 
 /**
  * Enhanced Android Keystore key management with 180-day rotation
@@ -260,7 +261,7 @@ class KeystoreKeyManager(private val context: Context) {
      */
     private fun generateKeyId(): String {
         val timestamp = System.currentTimeMillis()
-        val random = (Math.random() * 1000).toInt()
+        val random = Random.nextInt(0, 1000)
         return "kid-${timestamp}-${random}"
     }
 

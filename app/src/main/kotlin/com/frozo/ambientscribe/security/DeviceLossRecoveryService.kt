@@ -128,7 +128,7 @@ class DeviceLossRecoveryService(private val context: Context) {
             val result = RecoveryUploadResult(
                 success = true,
                 uploadId = uploadId,
-                encryptedFileSize = encryptedData.size,
+                encryptedFileSize = encryptedData.size.toLong(),
                 clinicKeyId = clinicKey.keyId
             )
 

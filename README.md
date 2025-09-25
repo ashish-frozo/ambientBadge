@@ -99,6 +99,9 @@ cd ambient-scribe
 # Run all tests
 ./gradlew test
 
+# Enforce coverage thresholds and verify NOTICE/license gates
+./gradlew jacocoCoverageVerification verifyLicenseAllowlist verifyNoticeUpToDate
+
 # Run specific test category
 ./gradlew test --tests "*performance*"
 ./gradlew test --tests "*localization*"
@@ -165,12 +168,15 @@ app/src/main/kotlin/com/frozo/ambientscribe/
 - [Implementation Complete Summary](docs/IMPLEMENTATION_COMPLETE_SUMMARY.md)
 - [Project Summary](docs/PROJECT_SUMMARY.md)
 - [Security Implementation Summary](docs/PT5_SECURITY_IMPLEMENTATION_SUMMARY.md)
+- [Architecture Decision Records](docs/adr)
+- [Internal API Reference](docs/API_REFERENCE.md)
 - [Threat Model STRIDE](docs/THREAT_MODEL_STRIDE.md)
 - [Privacy Review LINDDUN](docs/PRIVACY_REVIEW_LINDDUN.md)
 - [Device Loss Recovery Decision](docs/DEVICE_LOSS_RECOVERY_DECISION.md)
 
 ### **Testing Documentation**
 - [Testing Documentation](docs/TESTING_DOCUMENTATION.md)
+- [Documentation Validation Report](docs/DOCUMENTATION_VALIDATION_REPORT.md)
 - [Test Reports](reports/)
 - [Coverage Reports](app/build/reports/jacoco/)
 
@@ -178,6 +184,8 @@ app/src/main/kotlin/com/frozo/ambientscribe/
 - [Deployment Readiness Guide](docs/DEPLOYMENT_READINESS.md)
 - [CI/CD Workflows](.github/workflows/)
 - [Scripts](scripts/)
+- [Operations Handover Checklist](docs/HANDOVER_CHECKLIST.md)
+- [Troubleshooting Guide](docs/TROUBLESHOOTING_GUIDE.md)
 
 ## 🔧 **Development**
 

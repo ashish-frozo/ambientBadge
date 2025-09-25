@@ -316,7 +316,7 @@ class FontRenderingManager(private val context: Context) {
                 recommendations.add("Missing characters: ${missingCharacters.size}")
             }
             
-            FontValidationResult(
+            return FontValidationResult(
                 fontPath = fontPath,
                 isAvailable = isAvailable,
                 supportsScript = supportsScript,
@@ -327,7 +327,7 @@ class FontRenderingManager(private val context: Context) {
             
         } catch (e: Exception) {
             Log.e(TAG, "Failed to validate font: $fontPath", e)
-            FontValidationResult(
+            return FontValidationResult(
                 fontPath = fontPath,
                 isAvailable = false,
                 supportsScript = false,

@@ -9,8 +9,9 @@ import org.json.JSONObject
 import java.io.File
 import java.io.RandomAccessFile
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInt
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicLong
+import kotlin.random.Random
 
 /**
  * Thermal Management System - ST-6.5, ST-6.9
@@ -33,7 +34,7 @@ class ThermalManagementSystem(
 
     private val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
     private val isMonitoring = AtomicBoolean(false)
-    private val currentThermalState = AtomicInt(0) // 0 = NONE, 1 = LIGHT, 2 = MODERATE, 3 = SEVERE, 4 = CRITICAL
+    private val currentThermalState = AtomicInteger(0) // 0 = NONE, 1 = LIGHT, 2 = MODERATE, 3 = SEVERE, 4 = CRITICAL
     private val thermalHistory = mutableListOf<ThermalSample>()
     private val lastThrottleTime = AtomicLong(0)
     private val lastRecoveryTime = AtomicLong(0)
@@ -105,7 +106,7 @@ class ThermalManagementSystem(
             
             if (isMonitoring.get()) {
                 Log.w(TAG, "Thermal monitoring already started")
-                return Result.success(Unit)
+                return@withContext Result.success(Unit)
             }
 
             isMonitoring.set(true)
@@ -191,8 +192,9 @@ class ThermalManagementSystem(
         try {
             Log.d(TAG, "Applying thermal throttling")
             
-            val capabilities = deviceTierDetector.loadDeviceCapabilities()
-                ?: return Result.failure(IllegalStateException("No device capabilities found"))
+            val capabilities = kotlinx.coroutines.runBlocking {
+                deviceTierDetector.loadDeviceCapabilities()
+            } ?: return@withContext Result.failure(IllegalStateException("No device capabilities found"))
 
             val currentState = currentThermalState.get()
             val throttleLevel = determineThrottleLevel(currentState)
@@ -390,11 +392,11 @@ class ThermalManagementSystem(
             // For now, we'll simulate based on thermal state
             val thermalState = getThermalState()
             when (thermalState) {
-                0 -> 25f + (0..10).random() // 25-35°C
-                1 -> 35f + (0..5).random()  // 35-40°C
-                2 -> 40f + (0..5).random()  // 40-45°C
-                3 -> 45f + (0..5).random()  // 45-50°C
-                4 -> 50f + (0..10).random() // 50-60°C
+                0 -> 25f + Random.nextInt(0, 11) // 25-35°C
+                1 -> 35f + Random.nextInt(0, 6)  // 35-40°C
+                2 -> 40f + Random.nextInt(0, 6)  // 40-45°C
+                3 -> 45f + Random.nextInt(0, 6)  // 45-50°C
+                4 -> 50f + Random.nextInt(0, 11) // 50-60°C
                 else -> null
             }
         } catch (e: Exception) {
@@ -414,7 +416,9 @@ class ThermalManagementSystem(
      * Check if should throttle based on thermal state and CPU usage
      */
     private fun shouldThrottle(thermalState: Int, cpuUsage: Float): Boolean {
-        val capabilities = deviceTierDetector.loadDeviceCapabilities()
+        val capabilities = kotlinx.coroutines.runBlocking {
+            deviceTierDetector.loadDeviceCapabilities()
+        }
         val threshold = capabilities?.recommendedSettings?.thermalThrottleThreshold ?: 0.85f
         
         return thermalState >= 2 || cpuUsage >= (threshold * 100)
@@ -424,7 +428,9 @@ class ThermalManagementSystem(
      * Check if should recover
      */
     private fun shouldRecover(sample: ThermalSample): Boolean {
-        val capabilities = deviceTierDetector.loadDeviceCapabilities()
+        val capabilities = kotlinx.coroutines.runBlocking {
+            deviceTierDetector.loadDeviceCapabilities()
+        }
         val threshold = capabilities?.recommendedSettings?.thermalThrottleThreshold ?: 0.85f
         val recoveryThreshold = threshold * 0.7f // 70% of throttle threshold
         

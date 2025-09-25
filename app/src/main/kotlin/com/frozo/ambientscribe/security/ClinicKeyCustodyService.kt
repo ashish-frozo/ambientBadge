@@ -164,13 +164,13 @@ class ClinicKeyCustodyService(
         } catch (e: Exception) {
             Log.e(TAG, "Failed to generate clinic key for clinic: $clinicId", e)
             auditLogger.logEvent(
-                encounterId = "system",
-                eventType = AuditEvent.AuditEventType.ERROR,
-                actor = AuditEvent.AuditActor.ADMIN,
-                meta = mapOf(
+                "system",
+                AuditEvent.AuditEventType.ERROR,
+                AuditEvent.AuditActor.ADMIN,
+                mapOf(
                     "operation" to "clinic_key_generation_failed",
                     "clinic_id" to clinicId,
-                    "error" to e.message
+                    "error" to (e.message ?: "Unknown error")
                 )
             )
             Result.failure(e)
@@ -190,7 +190,7 @@ class ClinicKeyCustodyService(
 
             // Load current key metadata
             val currentMetadata = loadKeyMetadata(currentKeyId)
-                ?: return Result.failure(IllegalArgumentException("Key not found: $currentKeyId"))
+                ?: return@withContext Result.failure(IllegalArgumentException("Key not found: $currentKeyId"))
 
             // Generate new key
             val newKeyPair = generateKeyPair(currentMetadata.keyType, currentMetadata.keySize)
@@ -258,14 +258,14 @@ class ClinicKeyCustodyService(
         } catch (e: Exception) {
             Log.e(TAG, "Failed to rotate clinic key: $currentKeyId", e)
             auditLogger.logEvent(
-                encounterId = "system",
-                eventType = AuditEvent.AuditEventType.ERROR,
-                actor = AuditEvent.AuditActor.ADMIN,
-                meta = mapOf(
+                "system",
+                AuditEvent.AuditEventType.ERROR,
+                AuditEvent.AuditActor.ADMIN,
+                mapOf(
                     "operation" to "clinic_key_rotation_failed",
                     "clinic_id" to clinicId,
                     "key_id" to currentKeyId,
-                    "error" to e.message
+                    "error" to (e.message ?: "Unknown error")
                 )
             )
             Result.failure(e)
@@ -286,15 +286,15 @@ class ClinicKeyCustodyService(
 
             // Load key metadata
             val metadata = loadKeyMetadata(keyId)
-                ?: return Result.failure(IllegalArgumentException("Key not found: $keyId"))
+                ?: return@withContext Result.failure(IllegalArgumentException("Key not found: $keyId"))
 
             if (!metadata.isActive) {
-                return Result.failure(IllegalStateException("Key is not active: $keyId"))
+                return@withContext Result.failure(IllegalStateException("Key is not active: $keyId"))
             }
 
             // Check if key is expired
             if (isKeyExpired(metadata.expiresAt)) {
-                return Result.failure(IllegalStateException("Key is expired: $keyId"))
+                return@withContext Result.failure(IllegalStateException("Key is expired: $keyId"))
             }
 
             // Load and decrypt private key
@@ -357,14 +357,14 @@ class ClinicKeyCustodyService(
             logAccessAudit(accessEntry)
 
             auditLogger.logEvent(
-                encounterId = "system",
-                eventType = AuditEvent.AuditEventType.ERROR,
-                actor = AuditEvent.AuditActor.ADMIN,
-                meta = mapOf(
+                "system",
+                AuditEvent.AuditEventType.ERROR,
+                AuditEvent.AuditActor.ADMIN,
+                mapOf(
                     "operation" to "clinic_key_access_failed",
                     "key_id" to keyId,
                     "actor" to actor,
-                    "error" to e.message
+                    "error" to (e.message ?: "Unknown error")
                 )
             )
             Result.failure(e)
@@ -444,13 +444,13 @@ class ClinicKeyCustodyService(
         } catch (e: Exception) {
             Log.e(TAG, "Recovery procedure failed for clinic: $clinicId", e)
             auditLogger.logEvent(
-                encounterId = "system",
-                eventType = AuditEvent.AuditEventType.ERROR,
-                actor = AuditEvent.AuditActor.ADMIN,
-                meta = mapOf(
+                "system",
+                AuditEvent.AuditEventType.ERROR,
+                AuditEvent.AuditActor.ADMIN,
+                mapOf(
                     "operation" to "clinic_key_recovery_failed",
                     "clinic_id" to clinicId,
-                    "error" to e.message
+                    "error" to (e.message ?: "Unknown error")
                 )
             )
             Result.failure(e)

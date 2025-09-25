@@ -135,11 +135,11 @@ class LocalizationManager(private val context: Context) {
             val language = supportedLanguages.find { it.code == languageCode }
             
             if (language == null) {
-                return Result.failure(IllegalArgumentException("Unsupported language: $languageCode"))
+                return@withContext Result.failure(IllegalArgumentException("Unsupported language: $languageCode"))
             }
             
-            if (!language.isEnabled) {
-                return Result.failure(IllegalStateException("Language not enabled: $languageCode"))
+            if (!language!!.isEnabled) {
+                return@withContext Result.failure(IllegalStateException("Language not enabled: $languageCode"))
             }
             
             currentLanguage = languageCode

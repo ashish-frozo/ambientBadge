@@ -86,12 +86,12 @@ class ANRWatchdog(
             
             if (isRunning.get()) {
                 Log.w(TAG, "ANR watchdog already running")
-                return Result.success(Unit)
+                return@withContext Result.success(Unit)
             }
 
             if (!isDebugMode) {
                 Log.d(TAG, "ANR watchdog disabled in release mode")
-                return Result.success(Unit)
+                return@withContext Result.success(Unit)
             }
 
             isRunning.set(true)
@@ -159,7 +159,9 @@ class ANRWatchdog(
                 saveANRResult(anrResult)
                 
                 // Attempt recovery
-                attemptANRRecovery(anrResult)
+                kotlinx.coroutines.runBlocking {
+                    attemptANRRecovery(anrResult)
+                }
                 
                 // Increment ANR count
                 anrCount.incrementAndGet()

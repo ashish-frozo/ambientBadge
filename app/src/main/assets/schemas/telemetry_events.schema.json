@@ -1,0 +1,454 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Telemetry Events Schema v1.0",
+  "description": "Schema for PT-8 telemetry events (EVT-1 through EVT-5) with PII policy compliance",
+  "version": "1.0",
+  "type": "object",
+  "definitions": {
+    "baseEvent": {
+      "type": "object",
+      "required": ["encounter_id", "timestamp", "event_type", "device_tier"],
+      "properties": {
+        "encounter_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+          "description": "UUID of the encounter session"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp of the event"
+        },
+        "event_type": {
+          "type": "string",
+          "enum": ["encounter_start", "transcription_complete", "review_complete", "export_success", "thermal_event", "policy_toggle", "bulk_edit_applied", "time_skew", "crash_free_session", "edit_cause_code"],
+          "description": "Type of telemetry event"
+        },
+        "device_tier": {
+          "type": "string",
+          "enum": ["A", "B"],
+          "description": "Device performance tier"
+        },
+        "clinic_id": {
+          "type": ["string", "null"],
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "description": "Clinic identifier (no PII)"
+        }
+      }
+    },
+    "encounterStartEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/baseEvent" },
+        {
+          "type": "object",
+          "properties": {
+            "event_type": { "const": "encounter_start" },
+            "session_id": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+              "description": "UUID of the session"
+            },
+            "audio_quality": {
+              "type": ["string", "null"],
+              "enum": ["excellent", "good", "fair", "poor"],
+              "description": "Audio quality assessment"
+            },
+            "battery_level": {
+              "type": ["integer", "null"],
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Battery level percentage"
+            }
+          }
+        }
+      ]
+    },
+    "transcriptionCompleteEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/baseEvent" },
+        {
+          "type": "object",
+          "required": ["wer_estimate", "processing_time_ms", "model_version", "audio_duration_ms"],
+          "properties": {
+            "event_type": { "const": "transcription_complete" },
+            "wer_estimate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Word Error Rate estimate (0-1)"
+            },
+            "processing_time_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Processing time in milliseconds"
+            },
+            "model_version": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9._-]+$",
+              "description": "Model version identifier"
+            },
+            "audio_duration_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Audio duration in milliseconds"
+            },
+            "confidence_score": {
+              "type": ["number", "null"],
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Confidence score (0-1)"
+            },
+            "language_detected": {
+              "type": ["string", "null"],
+              "pattern": "^[a-z]{2}(-[A-Z]{2})?$",
+              "description": "Detected language code (ISO 639-1)"
+            }
+          }
+        }
+      ]
+    },
+    "reviewCompleteEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/baseEvent" },
+        {
+          "type": "object",
+          "required": ["edit_rate_percent", "review_duration_s", "confidence_overrides", "total_edits", "prescription_edits", "soap_edits"],
+          "properties": {
+            "event_type": { "const": "review_complete" },
+            "edit_rate_percent": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Percentage of content edited"
+            },
+            "review_duration_s": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Review duration in seconds"
+            },
+            "confidence_overrides": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of confidence overrides"
+            },
+            "total_edits": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Total number of edits"
+            },
+            "prescription_edits": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of prescription edits"
+            },
+            "soap_edits": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of SOAP edits"
+            },
+            "red_flags_resolved": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "description": "Number of red flags resolved"
+            }
+          }
+        }
+      ]
+    },
+    "exportSuccessEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/baseEvent" },
+        {
+          "type": "object",
+          "required": ["pdf_size_kb", "export_duration_ms", "battery_level_percent"],
+          "properties": {
+            "event_type": { "const": "export_success" },
+            "pdf_size_kb": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "PDF size in kilobytes"
+            },
+            "export_duration_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Export duration in milliseconds"
+            },
+            "battery_level_percent": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Battery level percentage"
+            },
+            "storage_used_kb": {
+              "type": ["integer", "null"],
+              "minimum": 0,
+              "description": "Storage used in kilobytes"
+            },
+            "qr_code_generated": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether QR code was generated"
+            },
+            "encryption_applied": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether encryption was applied"
+            }
+          }
+        }
+      ]
+    },
+    "thermalEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/baseEvent" },
+        {
+          "type": "object",
+          "required": ["thermal_state", "mitigation_action", "cpu_usage_percent"],
+          "properties": {
+            "event_type": { "const": "thermal_event" },
+            "thermal_state": {
+              "type": "string",
+              "enum": ["NORMAL", "WARNING", "SEVERE"],
+              "description": "Thermal state"
+            },
+            "mitigation_action": {
+              "type": "string",
+              "enum": ["THROTTLE", "PAUSE", "REDUCE_THREADS", "NONE"],
+              "description": "Action taken to mitigate thermal issues"
+            },
+            "cpu_usage_percent": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "CPU usage percentage"
+            },
+            "temperature": {
+              "type": ["number", "null"],
+              "minimum": 0,
+              "description": "Device temperature in Celsius"
+            },
+            "recovery_time_ms": {
+              "type": ["integer", "null"],
+              "minimum": 0,
+              "description": "Recovery time in milliseconds"
+            }
+          }
+        }
+      ]
+    },
+    "policyToggleEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/baseEvent" },
+        {
+          "type": "object",
+          "required": ["policy_type", "actor", "before_value", "after_value"],
+          "properties": {
+            "event_type": { "const": "policy_toggle" },
+            "policy_type": {
+              "type": "string",
+              "enum": ["brand_generic", "formulary", "pilot_mode", "privacy", "security"],
+              "description": "Type of policy changed"
+            },
+            "actor": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9_-]+$",
+              "description": "Actor who made the change (no PII)"
+            },
+            "before_value": {
+              "type": "string",
+              "description": "Previous policy value"
+            },
+            "after_value": {
+              "type": "string",
+              "description": "New policy value"
+            },
+            "reason": {
+              "type": ["string", "null"],
+              "description": "Reason for the change"
+            }
+          }
+        }
+      ]
+    },
+    "bulkEditAppliedEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/baseEvent" },
+        {
+          "type": "object",
+          "required": ["actor", "edit_type", "before_value", "after_value", "affected_count"],
+          "properties": {
+            "event_type": { "const": "bulk_edit_applied" },
+            "actor": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9_-]+$",
+              "description": "Actor who performed the bulk edit (no PII)"
+            },
+            "edit_type": {
+              "type": "string",
+              "enum": ["frequency", "duration", "dosage", "route", "notes"],
+              "description": "Type of bulk edit"
+            },
+            "before_value": {
+              "type": "string",
+              "description": "Previous value"
+            },
+            "after_value": {
+              "type": "string",
+              "description": "New value"
+            },
+            "affected_count": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Number of items affected"
+            }
+          }
+        }
+      ]
+    },
+    "timeSkewEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/baseEvent" },
+        {
+          "type": "object",
+          "required": ["device_time", "server_time", "skew_seconds", "time_source"],
+          "properties": {
+            "event_type": { "const": "time_skew" },
+            "device_time": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Device timestamp"
+            },
+            "server_time": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Server timestamp"
+            },
+            "skew_seconds": {
+              "type": "integer",
+              "description": "Time difference in seconds"
+            },
+            "time_source": {
+              "type": "string",
+              "enum": ["SNTP", "HTTPS", "LOCAL"],
+              "description": "Source of server time"
+            }
+          }
+        }
+      ]
+    },
+    "crashFreeSessionEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/baseEvent" },
+        {
+          "type": "object",
+          "required": ["session_duration_ms"],
+          "properties": {
+            "event_type": { "const": "crash_free_session" },
+            "session_duration_ms": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Session duration in milliseconds"
+            },
+            "crash_count": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "description": "Number of crashes during session"
+            },
+            "anr_count": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "description": "Number of ANRs during session"
+            },
+            "recovery_actions": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "description": "Number of recovery actions taken"
+            }
+          }
+        }
+      ]
+    },
+    "editCauseCodeEvent": {
+      "allOf": [
+        { "$ref": "#/definitions/baseEvent" },
+        {
+          "type": "object",
+          "required": ["edit_type", "field_name", "original_value", "corrected_value"],
+          "properties": {
+            "event_type": { "const": "edit_cause_code" },
+            "edit_type": {
+              "type": "string",
+              "enum": ["heard", "ambiguous", "unsupported_freq", "typo", "medical_term", "dosage", "frequency", "duration"],
+              "description": "Type of edit cause"
+            },
+            "field_name": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9_]+$",
+              "description": "Name of the field edited"
+            },
+            "original_value": {
+              "type": "string",
+              "description": "Original value (sanitized)"
+            },
+            "corrected_value": {
+              "type": "string",
+              "description": "Corrected value (sanitized)"
+            },
+            "confidence_score": {
+              "type": ["number", "null"],
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Confidence score of the original value"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "oneOf": [
+    { "$ref": "#/definitions/encounterStartEvent" },
+    { "$ref": "#/definitions/transcriptionCompleteEvent" },
+    { "$ref": "#/definitions/reviewCompleteEvent" },
+    { "$ref": "#/definitions/exportSuccessEvent" },
+    { "$ref": "#/definitions/thermalEvent" },
+    { "$ref": "#/definitions/policyToggleEvent" },
+    { "$ref": "#/definitions/bulkEditAppliedEvent" },
+    { "$ref": "#/definitions/timeSkewEvent" },
+    { "$ref": "#/definitions/crashFreeSessionEvent" },
+    { "$ref": "#/definitions/editCauseCodeEvent" }
+  ],
+  "pii_policy": {
+    "description": "PII Policy for Telemetry Events",
+    "rules": [
+      "No patient names, phone numbers, or personal identifiers",
+      "No medical record numbers (MRN) or patient IDs",
+      "No addresses, email addresses, or contact information",
+      "No birth dates, ages, or demographic information",
+      "No insurance information or policy numbers",
+      "All identifiers must be hashed or anonymized",
+      "Clinic IDs must be non-PII identifiers only",
+      "Actor fields must contain system identifiers, not personal names",
+      "All string values must be sanitized before logging"
+    ],
+    "validation": {
+      "required_checks": [
+        "phone_number_detection",
+        "email_detection", 
+        "ssn_detection",
+        "mrn_detection",
+        "name_detection",
+        "address_detection",
+        "patient_id_detection",
+        "dob_detection",
+        "age_detection",
+        "pii_keyword_detection"
+      ],
+      "block_on_violation": true,
+      "log_violations": true
+    }
+  }
+}

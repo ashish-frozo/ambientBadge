@@ -145,10 +145,10 @@ class PHIScrubber(private val context: Context) {
         return when {
             patternStr.contains("\\d{9}") || patternStr.contains("\\+91") -> PHONE_REPLACEMENT
             patternStr.contains("@") -> EMAIL_REPLACEMENT
-            patternStr.contains("MRN", Pattern.CASE_INSENSITIVE) -> MRN_REPLACEMENT
-            patternStr.contains("Patient|Doctor", Pattern.CASE_INSENSITIVE) -> MEDICAL_REPLACEMENT
-            patternStr.contains("Street|Road|Avenue", Pattern.CASE_INSENSITIVE) -> ADDRESS_REPLACEMENT
-            patternStr.contains("encounter|clinic", Pattern.CASE_INSENSITIVE) -> ID_REPLACEMENT
+            patternStr.contains("MRN", ignoreCase = true) -> MRN_REPLACEMENT
+            patternStr.contains("Patient", ignoreCase = true) || patternStr.contains("Doctor", ignoreCase = true) -> MEDICAL_REPLACEMENT
+            patternStr.contains("Street", ignoreCase = true) || patternStr.contains("Road", ignoreCase = true) || patternStr.contains("Avenue", ignoreCase = true) -> ADDRESS_REPLACEMENT
+            patternStr.contains("encounter", ignoreCase = true) || patternStr.contains("clinic", ignoreCase = true) -> ID_REPLACEMENT
             else -> GENERAL_PHI_REPLACEMENT
         }
     }

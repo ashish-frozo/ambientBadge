@@ -122,7 +122,7 @@ class TimeBudgetManager(
             Log.d(TAG, "Starting time budget operation: $operationId, stage: $stage")
             
             val capabilities = deviceTierDetector.loadDeviceCapabilities()
-                ?: return Result.failure(IllegalStateException("No device capabilities found"))
+                ?: return@withContext Result.failure(IllegalStateException("No device capabilities found"))
             
             val sla = getSLAForStage(stage, capabilities.tier)
             
@@ -157,7 +157,7 @@ class TimeBudgetManager(
             Log.d(TAG, "Completing time budget operation: $operationId")
             
             val operation = activeOperations[operationId]
-                ?: return Result.failure(IllegalStateException("Operation not found: $operationId"))
+                ?: return@withContext Result.failure(IllegalStateException("Operation not found: $operationId"))
             
             val endTime = System.currentTimeMillis()
             val actualMs = endTime - operation.startTime

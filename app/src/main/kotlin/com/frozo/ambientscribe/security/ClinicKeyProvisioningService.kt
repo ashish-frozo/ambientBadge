@@ -383,7 +383,7 @@ class ClinicKeyProvisioningService(private val context: Context) {
             }
             "ECC", "EC" -> {
                 val ecKey = publicKey as java.security.interfaces.ECPublicKey
-                ecKey.params.curve.field.size
+                ecKey.params.curve.field.fieldSize
             }
             else -> 0
         }
@@ -453,7 +453,7 @@ class ClinicKeyProvisioningService(private val context: Context) {
      */
     private suspend fun getKeyMetadata(keyId: String): KeyMetadata? = withContext(Dispatchers.IO) {
         try {
-            val metadataFile = File(context.filesDir, KEY_METADATA_DIR, "$keyId.json")
+            val metadataFile = File(File(context.filesDir, KEY_METADATA_DIR), "$keyId.json")
             if (!metadataFile.exists()) {
                 return@withContext null
             }
@@ -484,7 +484,7 @@ class ClinicKeyProvisioningService(private val context: Context) {
             }
 
             // Load public key
-            val keyFile = File(context.filesDir, CLINIC_KEYS_DIR, "${data["keyId"]}.key")
+            val keyFile = File(File(context.filesDir, CLINIC_KEYS_DIR), "${data["keyId"]}.key")
             val publicKeyBytes = keyFile.readBytes()
             val keySpec = X509EncodedKeySpec(publicKeyBytes)
             val keyFactory = KeyFactory.getInstance(data["keyType"] ?: "RSA")
@@ -615,7 +615,7 @@ class ClinicKeyProvisioningService(private val context: Context) {
                     val metadata = parseMetadataFromJson(file.readText())
                     if (metadata != null && metadata.createdDate.time < cutoffTime) {
                         // Delete key file
-                        val keyFile = File(context.filesDir, CLINIC_KEYS_DIR, "${metadata.keyId}.key")
+                        val keyFile = File(File(context.filesDir, CLINIC_KEYS_DIR), "${metadata.keyId}.key")
                         if (keyFile.exists()) {
                             keyFile.delete()
                         }

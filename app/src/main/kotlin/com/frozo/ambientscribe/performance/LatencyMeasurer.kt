@@ -8,6 +8,7 @@ import org.json.JSONObject
 import java.io.File
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.AtomicReference
+import kotlin.random.Random
 
 /**
  * Latency Measurer - ST-6.13, ST-6.14
@@ -72,7 +73,8 @@ class LatencyMeasurer(
         val targetP50Ms: Long,
         val targetP95Ms: Long,
         val p50Passed: Boolean,
-        val p95Passed: Boolean
+        val p95Passed: Boolean,
+        val timestamp: Long = System.currentTimeMillis()
     )
 
     /**
@@ -95,7 +97,7 @@ class LatencyMeasurer(
             
             if (isMeasuring.get()) {
                 Log.w(TAG, "Measurement already in progress")
-                return Result.failure(IllegalStateException("Measurement already in progress"))
+                return@withContext Result.failure(IllegalStateException("Measurement already in progress"))
             }
 
             isMeasuring.set(true)
@@ -130,11 +132,11 @@ class LatencyMeasurer(
             }
             
             if (measurements.isEmpty()) {
-                return Result.failure(IllegalStateException("No measurements available"))
+                return@withContext Result.failure(IllegalStateException("No measurements available"))
             }
             
             val capabilities = deviceTierDetector.loadDeviceCapabilities()
-                ?: return Result.failure(IllegalStateException("No device capabilities found"))
+                ?: return@withContext Result.failure(IllegalStateException("No device capabilities found"))
             
             val statistics = calculateLatencyStatistics(measurements, type, capabilities.tier)
             
@@ -244,7 +246,7 @@ class LatencyMeasurer(
             Log.d(TAG, "Running comprehensive latency tests")
             
             val capabilities = deviceTierDetector.loadDeviceCapabilities()
-                ?: return Result.failure(IllegalStateException("No device capabilities found"))
+                ?: return@withContext Result.failure(IllegalStateException("No device capabilities found"))
             
             val testResult = ComprehensiveTestResult(
                 tier = capabilities.tier,
@@ -428,7 +430,7 @@ class LatencyMeasurer(
         }
         
         // Add some randomness
-        val randomFactor = (0.8..1.2).random()
+        val randomFactor = Random.nextDouble(0.8, 1.2)
         val latency = (baseLatency * randomFactor).toLong()
         
         // Simulate processing time
@@ -450,7 +452,7 @@ class LatencyMeasurer(
         }
         
         // Add some randomness
-        val randomFactor = (0.8..1.2).random()
+        val randomFactor = Random.nextDouble(0.8, 1.2)
         val latency = (baseLatency * randomFactor).toLong()
         
         // Simulate processing time
@@ -548,7 +550,7 @@ class LatencyMeasurer(
         val tier: DeviceTierDetector.DeviceTier,
         val firstTokenResults: MutableList<NoiseProfileTestResult>,
         val draftReadyResults: MutableList<NoiseProfileTestResult>,
-        val overallPassed: Boolean,
+        var overallPassed: Boolean,
         val timestamp: Long
     )
 

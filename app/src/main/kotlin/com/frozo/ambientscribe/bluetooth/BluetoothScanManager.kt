@@ -92,11 +92,11 @@ class BluetoothScanManager(
             Log.d(TAG, "Initializing Bluetooth scan manager")
             
             if (bluetoothAdapter == null) {
-                return Result.failure(IllegalStateException("Bluetooth not supported on this device"))
+                return@withContext Result.failure(IllegalStateException("Bluetooth not supported on this device"))
             }
             
             if (!bluetoothAdapter.isEnabled) {
-                return Result.failure(IllegalStateException("Bluetooth is not enabled"))
+                return@withContext Result.failure(IllegalStateException("Bluetooth is not enabled"))
             }
             
             Log.d(TAG, "Bluetooth scan manager initialized")
@@ -164,11 +164,11 @@ class BluetoothScanManager(
             val permissionStatus = checkBluetoothPermissions()
             if (permissionStatus.allPermissionsGranted) {
                 Log.d(TAG, "Bluetooth permissions already granted")
-                return Result.success(Unit)
+                return@withContext Result.success(Unit)
             }
             
             if (!permissionStatus.canRequestPermissions) {
-                return Result.failure(IllegalStateException("Cannot request Bluetooth permissions"))
+                return@withContext Result.failure(IllegalStateException("Cannot request Bluetooth permissions"))
             }
             
             // In a real implementation, this would request permissions
@@ -191,16 +191,16 @@ class BluetoothScanManager(
             
             if (isScanning) {
                 Log.w(TAG, "Bluetooth scan already in progress")
-                return Result.failure(IllegalStateException("Scan already in progress"))
+                return@withContext Result.failure(IllegalStateException("Scan already in progress"))
             }
             
             val permissionStatus = checkBluetoothPermissions()
             if (!permissionStatus.allPermissionsGranted) {
-                return Result.failure(SecurityException("Bluetooth permissions not granted: ${permissionStatus.denialReason}"))
+                return@withContext Result.failure(SecurityException("Bluetooth permissions not granted: ${permissionStatus.denialReason}"))
             }
             
-            if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
-                return Result.failure(IllegalStateException("Bluetooth not available or not enabled"))
+            if (bluetoothAdapter == null || !bluetoothAdapter!!.isEnabled) {
+                return@withContext Result.failure(IllegalStateException("Bluetooth not available or not enabled"))
             }
             
             isScanning = true
@@ -222,7 +222,7 @@ class BluetoothScanManager(
                 devices = discoveredDevices.toList(),
                 scanDurationMs = scanDuration,
                 permissionGranted = permissionStatus.allPermissionsGranted,
-                bluetoothEnabled = bluetoothAdapter.isEnabled,
+                bluetoothEnabled = bluetoothAdapter?.isEnabled ?: false,
                 recommendations = generateScanRecommendations(discoveredDevices.size, scanDuration),
                 timestamp = System.currentTimeMillis()
             )
@@ -341,7 +341,7 @@ class BluetoothScanManager(
             Log.d(TAG, "Connecting to Bluetooth device: $deviceAddress")
             
             val device = discoveredDevices.find { it.address == deviceAddress }
-                ?: return Result.failure(IllegalArgumentException("Device not found: $deviceAddress"))
+                ?: return@withContext Result.failure(IllegalArgumentException("Device not found: $deviceAddress"))
             
             // In a real implementation, this would connect to the actual device
             // For now, we'll simulate the connection
@@ -379,7 +379,7 @@ class BluetoothScanManager(
             Log.d(TAG, "Disconnecting from Bluetooth device: $deviceAddress")
             
             val device = discoveredDevices.find { it.address == deviceAddress }
-                ?: return Result.failure(IllegalArgumentException("Device not found: $deviceAddress"))
+                ?: return@withContext Result.failure(IllegalArgumentException("Device not found: $deviceAddress"))
             
             // In a real implementation, this would disconnect from the actual device
             // For now, we'll simulate the disconnection

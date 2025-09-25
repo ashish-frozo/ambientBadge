@@ -27,7 +27,7 @@ class AuditGenesisManager(private val context: Context) {
 
     private val auditLogger = AuditLogger(context)
     private val hmacKeyManager = HMACKeyManager(context)
-    private val auditVerifier = AuditVerifier(context, hmacKeyManager)
+    private val auditVerifier = AuditVerifier(context)
     private val dateFormat = SimpleDateFormat(DATE_FORMAT, Locale.US)
 
     /**
@@ -376,13 +376,13 @@ class AuditGenesisManager(private val context: Context) {
             val integrityResult = auditVerifier.verifyAuditChain()
 
             val verificationResult = AuditChainVerificationResult(
-                integrityValid = integrityResult.isSuccess && integrityResult.getOrThrow(),
-                hasGaps = gapResult.isSuccess && gapResult.getOrThrow().hasGaps,
-                hasDuplicates = duplicateResult.isSuccess && duplicateResult.getOrThrow().hasDuplicates,
-                hasOutOfOrder = outOfOrderResult.isSuccess && outOfOrderResult.getOrThrow().hasOutOfOrder,
-                gapAnalysis = if (gapResult.isSuccess) gapResult.getOrThrow() else null,
-                duplicateAnalysis = if (duplicateResult.isSuccess) duplicateResult.getOrThrow() else null,
-                outOfOrderAnalysis = if (outOfOrderResult.isSuccess) outOfOrderResult.getOrThrow() else null,
+                integrityValid = integrityResult.isValid,
+                hasGaps = gapResult.isSuccess && gapResult.getOrNull()?.hasGaps == true,
+                hasDuplicates = duplicateResult.isSuccess && duplicateResult.getOrNull()?.hasDuplicates == true,
+                hasOutOfOrder = outOfOrderResult.isSuccess && outOfOrderResult.getOrNull()?.hasOutOfOrder == true,
+                gapAnalysis = if (gapResult.isSuccess) gapResult.getOrNull() else null,
+                duplicateAnalysis = if (duplicateResult.isSuccess) duplicateResult.getOrNull() else null,
+                outOfOrderAnalysis = if (outOfOrderResult.isSuccess) outOfOrderResult.getOrNull() else null,
                 timestamp = dateFormat.format(Date())
             )
 

@@ -61,7 +61,7 @@ class ForegroundServiceManager(
             
             if (!microphonePermissionGranted) {
                 Log.w(TAG, "Microphone permission not granted")
-                return Result.failure(SecurityException("Microphone permission required"))
+                return@withContext Result.failure(SecurityException("Microphone permission required"))
             }
             
             Log.d(TAG, "Foreground service manager initialized")
@@ -82,7 +82,7 @@ class ForegroundServiceManager(
             
             if (isServiceRunning) {
                 Log.w(TAG, "Foreground service already running")
-                return Result.success(Unit)
+                return@withContext Result.success(Unit)
             }
             
             // Create notification
@@ -115,7 +115,7 @@ class ForegroundServiceManager(
             
             if (!isServiceRunning) {
                 Log.w(TAG, "Foreground service not running")
-                return Result.success(Unit)
+                return@withContext Result.success(Unit)
             }
             
             // Stop foreground service
@@ -242,7 +242,7 @@ class ForegroundServiceManager(
             val statusFile = File(context.filesDir, "foreground_service/service_status.json")
             if (statusFile.exists()) {
                 val json = JSONObject(statusFile.readText())
-                return ForegroundServiceStatus(
+                return@withContext ForegroundServiceStatus(
                     isRunning = json.getBoolean("isRunning"),
                     notificationId = json.getInt("notificationId"),
                     channelId = json.getString("channelId"),
@@ -320,17 +320,19 @@ class ForegroundServiceManager(
             }
             
             // Determine overall validation result
-            validationResult.validationPassed = validationResult.microphonePermissionGranted &&
-                                              validationResult.notificationChannelCreated &&
-                                              validationResult.foregroundServiceTypeSupported &&
-                                              validationResult.microphoneServiceTypeSupported &&
-                                              Build.VERSION.SDK_INT >= 29
+            val finalValidationResult = validationResult.copy(
+                validationPassed = validationResult.microphonePermissionGranted &&
+                                 validationResult.notificationChannelCreated &&
+                                 validationResult.foregroundServiceTypeSupported &&
+                                 validationResult.microphoneServiceTypeSupported &&
+                                 Build.VERSION.SDK_INT >= 29
+            )
             
             // Save validation result
-            saveForegroundServiceValidationResult(validationResult)
+            saveForegroundServiceValidationResult(finalValidationResult)
             
-            Log.d(TAG, "Foreground service configuration validation completed. Passed: ${validationResult.validationPassed}")
-            Result.success(validationResult)
+            Log.d(TAG, "Foreground service configuration validation completed. Passed: ${finalValidationResult.validationPassed}")
+            Result.success(finalValidationResult)
 
         } catch (e: Exception) {
             Log.e(TAG, "Failed to validate foreground service configuration", e)

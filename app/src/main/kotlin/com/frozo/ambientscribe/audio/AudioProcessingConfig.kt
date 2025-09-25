@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.random.Random
 
 /**
  * Configuration for audio processing features (NS, AEC, AGC) with persistence
@@ -238,7 +239,7 @@ class AudioProcessingConfig(
         if (group == null) {
             // Assign random test group
             val groups = arrayOf(GROUP_A, GROUP_B, GROUP_C, GROUP_D, GROUP_E)
-            group = groups.random()
+            group = groups[Random.nextInt(groups.size)]
             prefs.edit().putString(KEY_AB_TEST_GROUP, group).apply()
             
             // Apply group settings

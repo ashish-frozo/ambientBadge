@@ -77,7 +77,7 @@ class MemoryManager(
             
             if (isMonitoring.get()) {
                 Log.w(TAG, "Memory monitoring already started")
-                return Result.success(Unit)
+                return@withContext Result.success(Unit)
             }
 
             isMonitoring.set(true)
@@ -154,7 +154,7 @@ class MemoryManager(
     suspend fun shouldUnloadLLM(): Boolean = withContext(Dispatchers.IO) {
         try {
             val capabilities = deviceTierDetector.loadDeviceCapabilities()
-                ?: return false
+                ?: return@withContext false
 
             val memoryUsage = getCurrentMemoryUsage()
             val isIdle = isDeviceIdle()
@@ -185,7 +185,7 @@ class MemoryManager(
             
             if (!isLLMLoaded.get()) {
                 Log.d(TAG, "LLM model is not loaded")
-                return Result.success(Unit)
+                return@withContext Result.success(Unit)
             }
 
             // Simulate LLM unloading
@@ -215,7 +215,7 @@ class MemoryManager(
             
             if (isLLMLoaded.get()) {
                 Log.d(TAG, "LLM model is already loaded")
-                return Result.success(Unit)
+                return@withContext Result.success(Unit)
             }
 
             // Check memory before loading
@@ -224,7 +224,7 @@ class MemoryManager(
             
             if (memoryUsage.memoryPressure > (capabilities?.recommendedSettings?.memoryPressureThreshold ?: 0.8f)) {
                 Log.w(TAG, "Memory pressure too high, cannot load LLM")
-                return Result.failure(IllegalStateException("Insufficient memory to load LLM"))
+                return@withContext Result.failure(IllegalStateException("Insufficient memory to load LLM"))
             }
 
             // Simulate LLM loading
@@ -365,6 +365,10 @@ class MemoryManager(
             MemoryAction.EMERGENCY_CLEANUP -> {
                 recommendations.add("Emergency memory cleanup performed")
                 recommendations.add("Consider closing all other apps immediately")
+            }
+            MemoryAction.FORCE_GC -> {
+                recommendations.add("Garbage collection has been forced")
+                recommendations.add("Memory should be freed up now")
             }
             MemoryAction.NONE -> {
                 recommendations.add("Memory usage is within normal limits")

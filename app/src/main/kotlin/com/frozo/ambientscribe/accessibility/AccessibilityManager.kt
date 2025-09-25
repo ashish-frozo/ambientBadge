@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.io.File
+import kotlin.math.pow
 
 /**
  * Accessibility Manager - ST-7.4, ST-7.5, ST-7.12

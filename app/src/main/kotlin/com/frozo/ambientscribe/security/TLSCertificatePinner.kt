@@ -6,17 +6,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.CertificatePinner
 import okhttp3.OkHttpClient
-import okhttp3.tls.HandshakeCertificates
-import okhttp3.tls.HeldCertificate
+// TLS classes not available in this OkHttp version
+// import okhttp3.tls.HandshakeCertificates
+// import okhttp3.tls.HeldCertificate
 import org.json.JSONObject
 import java.io.File
 import java.security.cert.Certificate
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
+import java.util.Base64
 import java.util.concurrent.TimeUnit
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
+import kotlin.random.Random
 
 /**
  * TLS Certificate Pinner - ST-5.21
@@ -184,13 +187,13 @@ class TLSCertificatePinner(
         } catch (e: Exception) {
             Log.e(TAG, "Failed to add certificate pin for hostname: $hostname", e)
             auditLogger.logEvent(
-                encounterId = "system",
-                eventType = AuditEvent.AuditEventType.ERROR,
-                actor = AuditEvent.AuditActor.ADMIN,
-                meta = mapOf(
+                "system",
+                AuditEvent.AuditEventType.ERROR,
+                AuditEvent.AuditActor.ADMIN,
+                mapOf(
                     "operation" to "cert_pin_add_failed",
                     "hostname" to hostname,
-                    "error" to e.message
+                    "error" to (e.message ?: "Unknown error")
                 )
             )
             Result.failure(e)
@@ -210,12 +213,12 @@ class TLSCertificatePinner(
 
             // Find current active pin
             val currentPin = loadActivePinForHost(hostname)
-                ?: return Result.failure(IllegalArgumentException("No active pin found for hostname: $hostname"))
+                ?: return@withContext Result.failure(IllegalArgumentException("No active pin found for hostname: $hostname"))
 
             // Create new pin
             val newPinResult = addCertificatePin(hostname, newCertificate, currentPin.pinType)
             if (newPinResult.isFailure) {
-                return Result.failure(newPinResult.exceptionOrNull()!!)
+                return@withContext Result.failure(newPinResult.exceptionOrNull()!!)
             }
             val newPin = newPinResult.getOrThrow()
 
@@ -263,13 +266,13 @@ class TLSCertificatePinner(
         } catch (e: Exception) {
             Log.e(TAG, "Failed to rotate certificate pin for hostname: $hostname", e)
             auditLogger.logEvent(
-                encounterId = "system",
-                eventType = AuditEvent.AuditEventType.ERROR,
-                actor = AuditEvent.AuditActor.ADMIN,
-                meta = mapOf(
+                "system",
+                AuditEvent.AuditEventType.ERROR,
+                AuditEvent.AuditActor.ADMIN,
+                mapOf(
                     "operation" to "cert_pin_rotation_failed",
                     "hostname" to hostname,
-                    "error" to e.message
+                    "error" to (e.message ?: "Unknown error")
                 )
             )
             Result.failure(e)
@@ -454,7 +457,7 @@ class TLSCertificatePinner(
     private suspend fun testPinValidation(hostname: String): Boolean = withContext(Dispatchers.IO) {
         try {
             val pins = loadActivePinsForHost(hostname)
-            if (pins.isEmpty()) return false
+            if (pins.isEmpty()) return@withContext false
 
             val client = createPinnedHttpClient(hostname)
             val request = okhttp3.Request.Builder()
@@ -489,13 +492,13 @@ class TLSCertificatePinner(
 
     private fun generatePinId(hostname: String, pinType: String): String {
         val timestamp = System.currentTimeMillis()
-        val random = (1000..9999).random()
+        val random = Random.nextInt(1000, 10000)
         return "pin_${hostname.replace(".", "_")}_${pinType}_${timestamp}_${random}"
     }
 
     private fun generateTestId(hostname: String): String {
         val timestamp = System.currentTimeMillis()
-        val random = (1000..9999).random()
+        val random = Random.nextInt(1000, 10000)
         return "test_${hostname.replace(".", "_")}_${timestamp}_${random}"
     }
 

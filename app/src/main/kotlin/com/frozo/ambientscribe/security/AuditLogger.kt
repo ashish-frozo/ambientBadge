@@ -29,6 +29,13 @@ class AuditLogger(private val context: Context) {
         
         // Current key ID (rotates every 90 days)
         private val currentKid = "kid-2025Q3"
+        
+        // Event type constants
+        const val EVENT_PURGE_BUFFER = "purge_buffer"
+        const val EVENT_PURGE_30S = "purge_30s"
+        const val EVENT_SESSION_END = "session_end"
+        const val EVENT_CONSENT_ON = "consent_on"
+        const val EVENT_CONSENT_OFF = "consent_off"
     }
 
     // In-memory previous hash for HMAC chaining

@@ -68,7 +68,7 @@ class PerformanceTargetValidator(
                 ?: deviceTierDetector.detectDeviceTier()
             
             if (capabilities.tier == DeviceTierDetector.DeviceTier.UNSUPPORTED) {
-                return Result.failure(IllegalStateException("Device not supported for performance monitoring"))
+                return@withContext Result.failure(IllegalStateException("Device not supported for performance monitoring"))
             }
 
             isMonitoring.set(true)
@@ -94,7 +94,7 @@ class PerformanceTargetValidator(
             isMonitoring.set(false)
             
             val capabilities = deviceTierDetector.loadDeviceCapabilities()
-                ?: return Result.failure(IllegalStateException("No device capabilities found"))
+                ?: return@withContext Result.failure(IllegalStateException("No device capabilities found"))
 
             val measurements = validatePerformanceTargets(capabilities)
             val overallPassed = measurements.all { it.passed }
@@ -155,14 +155,14 @@ class PerformanceTargetValidator(
             val currentTime = SystemClock.elapsedRealtime()
             
             if (startLevel == null || startTime == 0L) {
-                return Result.failure(IllegalStateException("Battery monitoring not started"))
+                return@withContext Result.failure(IllegalStateException("Battery monitoring not started"))
             }
 
             val currentLevel = getBatteryLevel()
             val elapsedTimeMs = currentTime - startTime
             
             if (elapsedTimeMs < BATTERY_SAMPLE_DURATION_MS) {
-                return Result.failure(IllegalStateException("Insufficient measurement time: ${elapsedTimeMs}ms"))
+                return@withContext Result.failure(IllegalStateException("Insufficient measurement time: ${elapsedTimeMs}ms"))
             }
 
             val batteryConsumed = startLevel - currentLevel

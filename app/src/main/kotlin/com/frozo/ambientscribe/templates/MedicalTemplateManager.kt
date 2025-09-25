@@ -498,21 +498,21 @@ class MedicalTemplateManager(private val context: Context) {
             
             val template = templates[templateId]
             if (template == null) {
-                return Result.failure(IllegalArgumentException("Template not found: $templateId"))
+                return@withContext Result.failure(IllegalArgumentException("Template not found: $templateId"))
             }
             
-            if (!template.isApproved) {
-                return Result.failure(IllegalStateException("Template not approved: $templateId"))
+            if (!template!!.isApproved) {
+                return@withContext Result.failure(IllegalStateException("Template not approved: $templateId"))
             }
             
             // Validate placeholders
             val validationResult = validatePlaceholders(template, placeholders)
             if (!validationResult.isValid) {
-                return Result.failure(IllegalArgumentException("Invalid placeholders: ${validationResult.issues.joinToString(", ")}"))
+                return@withContext Result.failure(IllegalArgumentException("Invalid placeholders: ${validationResult.issues.joinToString(", ")}"))
             }
             
             // Generate document content
-            var content = template.content
+            var content = template!!.content
             placeholders.forEach { (key, value) ->
                 content = content.replace("{$key}", value)
             }
@@ -524,7 +524,7 @@ class MedicalTemplateManager(private val context: Context) {
                 templateId = templateId,
                 content = content,
                 placeholders = placeholders,
-                language = template.language,
+                language = template!!.language,
                 timestamp = System.currentTimeMillis(),
                 clinicId = clinicId,
                 patientId = patientId,

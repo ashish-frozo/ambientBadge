@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.frozo.ambientscribe.app-mergeDebugResources-38:/values-v16/values-v16.xml",
+            "outputFile": "com.frozo.ambientscribe.app-mergeDebugResources-44:/values-v16/values-v16.xml",
             "map": [
                 {
-                    "source": "/Users/ashishdhiman/.gradle/caches/8.14/transforms/57d3af3cb209cd79d524b2faaddc85bb/transformed/core-1.12.0/res/values-v16/values-v16.xml",
+                    "source": "/Users/ashishdhiman/.gradle/caches/8.14/transforms/f4a6571a035c3924b4e61975f0ba2dc4/transformed/core-1.12.0/res/values-v16/values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "/Users/ashishdhiman/.gradle/caches/8.14/transforms/8ad55764aa658a49de8e63a97cb6a9e6/transformed/appcompat-1.6.1/res/values-v16/values-v16.xml",
+                    "source": "/Users/ashishdhiman/.gradle/caches/8.14/transforms/3eafdbb7059c19ae898a793745b69e4d/transformed/appcompat-1.6.1/res/values-v16/values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

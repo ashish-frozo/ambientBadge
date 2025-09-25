@@ -2,6 +2,7 @@ package com.frozo.ambientscribe.performance
 
 import android.content.Context
 import android.os.BatteryManager
+import android.os.Build
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -73,11 +74,11 @@ class BatteryStatsValidator(
             
             if (isValidationRunning.get()) {
                 Log.w(TAG, "Battery validation already running")
-                return Result.success(Unit)
+                return@withContext Result.success(Unit)
             }
 
             val capabilities = deviceTierDetector.loadDeviceCapabilities()
-                ?: return Result.failure(IllegalStateException("No device capabilities found"))
+                ?: return@withContext Result.failure(IllegalStateException("No device capabilities found"))
 
             isValidationRunning.set(true)
             validationStartTime.set(System.currentTimeMillis())
@@ -104,7 +105,7 @@ class BatteryStatsValidator(
             Log.d(TAG, "Stopping battery validation")
             
             if (!isValidationRunning.get()) {
-                return Result.failure(IllegalStateException("Battery validation not running"))
+                return@withContext Result.failure(IllegalStateException("Battery validation not running"))
             }
 
             isValidationRunning.set(false)
@@ -114,7 +115,7 @@ class BatteryStatsValidator(
             batterySamples.add(finalSample)
 
             val capabilities = deviceTierDetector.loadDeviceCapabilities()
-                ?: return Result.failure(IllegalStateException("No device capabilities found"))
+                ?: return@withContext Result.failure(IllegalStateException("No device capabilities found"))
 
             val validationResult = calculateBatteryValidationResult(capabilities.tier)
             
@@ -136,13 +137,14 @@ class BatteryStatsValidator(
     suspend fun addBatterySample(): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             if (!isValidationRunning.get()) {
-                return Result.failure(IllegalStateException("Battery validation not running"))
+                return@withContext Result.failure(IllegalStateException("Battery validation not running"))
             }
 
             val sample = getCurrentBatterySample()
             batterySamples.add(sample)
 
             Log.d(TAG, "Battery sample added: ${sample.level}%")
+            Result.success(Unit)
 
         } catch (e: Exception) {
             Log.e(TAG, "Failed to add battery sample", e)
@@ -155,12 +157,50 @@ class BatteryStatsValidator(
      */
     private fun getCurrentBatterySample(): BatterySample {
         val level = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY).toFloat()
-        val temperature = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_TEMPERATURE) / 10f
-        val voltage = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_VOLTAGE)
+        val temperature = try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                // Use reflection to access temperature property if available
+                val temperatureField = BatteryManager::class.java.getDeclaredField("BATTERY_PROPERTY_TEMPERATURE")
+                val temperatureProperty = temperatureField.getInt(null)
+                batteryManager.getIntProperty(temperatureProperty) / 10f
+            } else {
+                25f // Default temperature for older API levels
+            }
+        } catch (e: Exception) {
+            25f // Default temperature
+        }
+        val voltage = try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                // Use reflection to access voltage property if available
+                val voltageField = BatteryManager::class.java.getDeclaredField("BATTERY_PROPERTY_VOLTAGE")
+                val voltageProperty = voltageField.getInt(null)
+                batteryManager.getIntProperty(voltageProperty)
+            } else {
+                3700 // Default voltage for older API levels
+            }
+        } catch (e: Exception) {
+            3700 // Default voltage
+        }
         val isCharging = batteryManager.isCharging
-        val chargeCounter = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER).toLong()
-        val health = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS)
-        val status = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS)
+        val chargeCounter = try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CHARGE_COUNTER).toLong()
+            } else {
+                0L // Default charge counter for older API levels
+            }
+        } catch (e: Exception) {
+            0L // Default charge counter
+        }
+        val health = try {
+            batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS)
+        } catch (e: Exception) {
+            BatteryManager.BATTERY_STATUS_UNKNOWN
+        }
+        val status = try {
+            batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS)
+        } catch (e: Exception) {
+            BatteryManager.BATTERY_STATUS_UNKNOWN
+        }
 
         return BatterySample(
             timestamp = System.currentTimeMillis(),
