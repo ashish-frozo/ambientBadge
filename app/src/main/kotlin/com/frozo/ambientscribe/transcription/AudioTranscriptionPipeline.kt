@@ -10,6 +10,7 @@ import com.frozo.ambientscribe.telemetry.MetricsCollector
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
@@ -448,8 +449,12 @@ class AudioTranscriptionPipeline(
                 .getAudioFlow()
                 .shareIn(coroutineScope, SharingStarted.Eagerly, replay = 0)
 
+            val energyState = MutableStateFlow(0f)
+            val vadState = MutableStateFlow(VoiceActivityState.SILENCE)
+
             // Collect audio data and VAD state in parallel
             val audioJob = coroutineScope.launch {
+                var lastVadState = vadState.value
                 sharedAudioFlow.collect { samples ->
                     // Process audio through ASR
                     val asrResult = asrService.processAudio(samples.samples)
@@ -463,6 +468,15 @@ class AudioTranscriptionPipeline(
                     // Calculate energy level and VAD state
                     val energyLevel = calculateEnergyLevel(samples.samples)
                     val isVoiceActive = energyLevel > vadThreshold
+                    val newVadState = if (isVoiceActive) VoiceActivityState.SPEECH else VoiceActivityState.SILENCE
+
+                    energyState.value = energyLevel
+                    vadState.value = newVadState
+
+                    if (newVadState != lastVadState) {
+                        Timber.v("VAD state changed to: $newVadState")
+                        lastVadState = newVadState
+                    }
                     
                     // Create audio data for diarization
                     val audioData = SpeakerDiarization.AudioData(
@@ -476,19 +490,6 @@ class AudioTranscriptionPipeline(
                 }
             }
             
-            val vadJob = coroutineScope.launch {
-                var currentVadState = VoiceActivityState.SILENCE
-                var currentEnergyLevel = 0f
-
-                sharedAudioFlow.collect { samples ->
-                    val energyLevel = calculateEnergyLevel(samples.samples)
-                    val isVoiceActive = energyLevel > vadThreshold
-                    currentVadState = if (isVoiceActive) VoiceActivityState.SPEECH else VoiceActivityState.SILENCE
-                    currentEnergyLevel = energyLevel
-                    Timber.v("VAD state changed to: $currentVadState")
-                }
-            }
-            
             val transcriptionJob = coroutineScope.launch {
                 asrService.getTranscriptionFlow().collect { transcriptionResult ->
                     // Get current speaker ID
@@ -497,8 +498,8 @@ class AudioTranscriptionPipeline(
                     // Create pipeline result
                     val pipelineResult = TranscriptionPipelineResult(
                         transcription = transcriptionResult,
-                        vadState = VoiceActivityState.SPEECH, // Simplified
-                        audioEnergyLevel = 0.5f, // Simplified
+                        vadState = vadState.value,
+                        audioEnergyLevel = energyState.value,
                         speakerId = currentSpeakerId
                     )
                     
@@ -539,7 +540,7 @@ class AudioTranscriptionPipeline(
             }
             
             // Wait for all jobs to complete
-            joinAll(audioJob, vadJob, transcriptionJob, diarizationJob)
+            joinAll(audioJob, transcriptionJob, diarizationJob)
             
         } catch (e: Exception) {
             Timber.e(e, "Error in audio stream processing")

@@ -87,6 +87,7 @@ class AudioCapture(private val context: Context) {
         if (isRecording) {
             return false
         }
+        clearRingBuffer()
         isRecording = true
         return true
     }

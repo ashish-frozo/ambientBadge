@@ -10,12 +10,12 @@ plugins {
 
 android {
     namespace = "com.frozo.ambientscribe"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.frozo.ambientscribe"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 

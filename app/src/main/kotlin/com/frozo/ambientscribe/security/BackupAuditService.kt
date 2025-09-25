@@ -130,7 +130,7 @@ class BackupAuditService(private val context: Context) {
             )
             
             val applicationInfo = packageInfo.applicationInfo
-            val allowBackup = applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_ALLOW_BACKUP != 0
+            val allowBackup = (applicationInfo?.flags ?: 0) and android.content.pm.ApplicationInfo.FLAG_ALLOW_BACKUP != 0
             
             Timber.d("AllowBackup setting: $allowBackup")
             allowBackup

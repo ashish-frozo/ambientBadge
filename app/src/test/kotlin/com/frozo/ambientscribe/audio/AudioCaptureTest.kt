@@ -274,6 +274,25 @@ class AudioCaptureTest {
         val snapshot = audioCapture.getRingBufferData()
         assertEquals(smallSize, snapshot.size)
     }
+
+    @Test
+    fun testRingBufferClearedOnStartRecording() = runTest {
+        audioCapture.initialize()
+
+        val bytesBufferedField = AudioCapture::class.java.getDeclaredField("bytesBuffered").apply { isAccessible = true }
+        val ringBufferPositionField = AudioCapture::class.java.getDeclaredField("ringBufferPosition").apply { isAccessible = true }
+
+        bytesBufferedField.setInt(audioCapture, 128)
+        ringBufferPositionField.setInt(audioCapture, 64)
+
+        whenever(mockAudioRecord.recordingState).thenReturn(AudioRecord.RECORDSTATE_RECORDING)
+
+        val started = audioCapture.startRecording()
+        assertTrue(started)
+
+        assertEquals(0, bytesBufferedField.getInt(audioCapture))
+        assertEquals(0, ringBufferPositionField.getInt(audioCapture))
+    }
     
     @Test
     fun testVerifyBufferEmpty() = runTest {
