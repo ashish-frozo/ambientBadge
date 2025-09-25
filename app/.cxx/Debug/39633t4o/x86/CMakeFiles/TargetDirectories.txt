@@ -1,0 +1,4 @@
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/.cxx/Debug/39633t4o/x86/CMakeFiles/whisper_android.dir
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/.cxx/Debug/39633t4o/x86/CMakeFiles/llama_android.dir
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/.cxx/Debug/39633t4o/x86/CMakeFiles/edit_cache.dir
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/.cxx/Debug/39633t4o/x86/CMakeFiles/rebuild_cache.dir

@@ -52,11 +52,10 @@ class ASRService(
         // Native library loading
         init {
             try {
-                System.loadLibrary("ctranslate2")
                 System.loadLibrary("whisper_android")
-                Timber.d("CTranslate2 native libraries loaded successfully")
+                Timber.d("Whisper native library loaded successfully")
             } catch (e: UnsatisfiedLinkError) {
-                Timber.e(e, "Failed to load CTranslate2 native libraries")
+                Timber.e(e, "Failed to load Whisper native library")
             }
         }
     }

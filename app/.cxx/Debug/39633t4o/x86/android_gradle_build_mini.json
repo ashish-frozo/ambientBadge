@@ -1,0 +1,33 @@
+{
+  "buildFiles": [
+    "/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/ashishdhiman/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/ashishdhiman/Fzozo - Ambient_badge/app/.cxx/Debug/39633t4o/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/ashishdhiman/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/ashishdhiman/Fzozo - Ambient_badge/app/.cxx/Debug/39633t4o/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "whisper_android::@6890427a1f51a3e7e1df": {
+      "artifactName": "whisper_android",
+      "abi": "x86",
+      "output": "/Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/cxx/Debug/39633t4o/obj/x86/libwhisper_android.so",
+      "runtimeFiles": []
+    },
+    "llama_android::@6890427a1f51a3e7e1df": {
+      "artifactName": "llama_android",
+      "abi": "x86",
+      "output": "/Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/cxx/Debug/39633t4o/obj/x86/libllama_android.so",
+      "runtimeFiles": []
+    }
+  }
+}

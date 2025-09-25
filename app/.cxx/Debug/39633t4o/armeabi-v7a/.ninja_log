@@ -1,0 +1,5 @@
+# ninja log v5
+1	620	1758803172577155237	CMakeFiles/whisper_android.dir/whisper_android.cpp.o	5e4dad8e1a1de3e1
+621	722	1758803172684145309	/Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/cxx/Debug/39633t4o/obj/armeabi-v7a/libwhisper_android.so	4a94fec6691f9a8d
+1	742	1758803172720100722	CMakeFiles/llama_android.dir/llama_android.cpp.o	c6998b3adf6b869f
+742	825	1758803172784421590	/Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/cxx/Debug/39633t4o/obj/armeabi-v7a/libllama_android.so	dc10c332956d46ce

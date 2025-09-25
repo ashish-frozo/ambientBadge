@@ -1,0 +1,5 @@
+/Users/ashishdhiman/Library/Android/sdk/cmake/3.22.1/bin/ninja \
+  -C \
+  "/Users/ashishdhiman/Fzozo - Ambient_badge/app/.cxx/Debug/39633t4o/arm64-v8a" \
+  llama_android \
+  whisper_android

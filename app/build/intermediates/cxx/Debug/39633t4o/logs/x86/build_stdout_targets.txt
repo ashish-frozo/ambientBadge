@@ -1,0 +1,61 @@
+ninja: Entering directory `/Users/ashishdhiman/Fzozo - Ambient_badge/app/.cxx/Debug/39633t4o/x86'
+[1/4] Building CXX object CMakeFiles/whisper_android.dir/whisper_android.cpp.o
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp:72:61: warning: format specifies type 'long' but the argument has type 'jlong' (aka 'long long') [-Wformat]
+        LOGD("Model initialized successfully, handle: %ld", handle);
+                                                      ~~~   ^~~~~~
+                                                      %lld
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp:13:67: note: expanded from macro 'LOGD'
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
+                                                                  ^~~~~~~~~~~
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp:87:68: warning: format specifies type 'long' but the argument has type 'jlong' (aka 'long long') [-Wformat]
+        LOGE("Invalid model handle or model not initialized: %ld", handle);
+                                                             ~~~   ^~~~~~
+                                                             %lld
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp:14:67: note: expanded from macro 'LOGE'
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+                                                                  ^~~~~~~~~~~
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp:185:41: warning: format specifies type 'long' but the argument has type 'jlong' (aka 'long long') [-Wformat]
+    LOGD("Releasing model handle: %ld", handle);
+                                  ~~~   ^~~~~~
+                                  %lld
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp:13:67: note: expanded from macro 'LOGD'
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
+                                                                  ^~~~~~~~~~~
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp:192:43: warning: format specifies type 'long' but the argument has type 'jlong' (aka 'long long') [-Wformat]
+        LOGE("Invalid model handle: %ld", handle);
+                                    ~~~   ^~~~~~
+                                    %lld
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp:14:67: note: expanded from macro 'LOGE'
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+                                                                  ^~~~~~~~~~~
+4 warnings generated.
+[2/4] Linking CXX shared library "/Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/cxx/Debug/39633t4o/obj/x86/libwhisper_android.so"
+[3/4] Building CXX object CMakeFiles/llama_android.dir/llama_android.cpp.o
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/llama_android.cpp:137:49: warning: format specifies type 'long' but the argument has type 'std::basic_istream<char>::pos_type' (aka 'fpos<mbstate_t>') [-Wformat]
+        LOGE("Model file too small: %ld bytes", size);
+                                    ~~~         ^~~~
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/llama_android.cpp:14:63: note: expanded from macro 'LOGE'
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, TAG, __VA_ARGS__)
+                                                              ^~~~~~~~~~~
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/llama_android.cpp:141:45: warning: format specifies type 'long' but the argument has type 'std::basic_istream<char>::pos_type' (aka 'fpos<mbstate_t>') [-Wformat]
+    LOGI("Model file validated: %ld bytes", size);
+                                ~~~         ^~~~
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/llama_android.cpp:13:62: note: expanded from macro 'LOGI'
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, TAG, __VA_ARGS__)
+                                                             ^~~~~~~~~~~
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/llama_android.cpp:191:69: warning: format specifies type 'long' but the argument has type 'jlong' (aka 'long long') [-Wformat]
+        LOGI("LLaMA context initialized successfully, handle: %ld", handle);
+                                                              ~~~   ^~~~~~
+                                                              %lld
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/llama_android.cpp:13:62: note: expanded from macro 'LOGI'
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, TAG, __VA_ARGS__)
+                                                             ^~~~~~~~~~~
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/llama_android.cpp:246:44: warning: format specifies type 'long' but the argument has type 'jlong' (aka 'long long') [-Wformat]
+    LOGI("Cleaning up LLaMA context: %ld", handle);
+                                     ~~~   ^~~~~~
+                                     %lld
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/llama_android.cpp:13:62: note: expanded from macro 'LOGI'
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, TAG, __VA_ARGS__)
+                                                             ^~~~~~~~~~~
+4 warnings generated.
+[4/4] Linking CXX shared library "/Users/ashishdhiman/Fzozo - Ambient_badge/app/build/intermediates/cxx/Debug/39633t4o/obj/x86/libllama_android.so"
