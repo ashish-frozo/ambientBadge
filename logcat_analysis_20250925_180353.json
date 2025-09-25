@@ -1,0 +1,28 @@
+{
+  "timestamp": "2025-09-25T18:03:53.439291",
+  "total_lines": 5,
+  "app_logs": 0,
+  "errors": {},
+  "patterns": {
+    "fatal_exception": 0,
+    "android_runtime_error": 0,
+    "app_error": 0,
+    "native_link_error": 0,
+    "anr": 0,
+    "memory_warning": 0,
+    "thermal_warning": 0,
+    "audio_error": 0,
+    "permission_denied": 0,
+    "whisper_logs": 0,
+    "llama_logs": 0,
+    "asr_logs": 0,
+    "keystore_logs": 0,
+    "encryption_logs": 0
+  },
+  "top_errors": [],
+  "critical_issues": [],
+  "performance_issues": [],
+  "security_issues": [],
+  "native_issues": [],
+  "audio_issues": []
+}
