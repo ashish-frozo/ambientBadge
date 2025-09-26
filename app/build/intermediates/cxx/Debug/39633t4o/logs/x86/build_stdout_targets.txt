@@ -14,14 +14,14 @@ ninja: Entering directory `/Users/ashishdhiman/Fzozo - Ambient_badge/app/.cxx/De
 /Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp:15:67: note: expanded from macro 'LOGE'
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
                                                                   ^~~~~~~~~~~
-/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp:303:41: warning: format specifies type 'long' but the argument has type 'jlong' (aka 'long long') [-Wformat]
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp:342:41: warning: format specifies type 'long' but the argument has type 'jlong' (aka 'long long') [-Wformat]
     LOGD("Releasing model handle: %ld", handle);
                                   ~~~   ^~~~~~
                                   %lld
 /Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp:14:67: note: expanded from macro 'LOGD'
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
                                                                   ^~~~~~~~~~~
-/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp:310:43: warning: format specifies type 'long' but the argument has type 'jlong' (aka 'long long') [-Wformat]
+/Users/ashishdhiman/Fzozo - Ambient_badge/app/src/main/cpp/whisper_android.cpp:349:43: warning: format specifies type 'long' but the argument has type 'jlong' (aka 'long long') [-Wformat]
         LOGE("Invalid model handle: %ld", handle);
                                     ~~~   ^~~~~~
                                     %lld
